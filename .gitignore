@@ -1,0 +1,39 @@
+# Gradle
+.gradle/
+build/
+local.properties
+gradle.properties.local
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+.kotlin/
+captures/
+
+# Android build outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Logs and crashes
+*.log
+hs_err_pid*.log
+.cxx/
+
+# Native
+.externalNativeBuild/
+
+# Keystores (NEVER commit)
+*.jks
+*.keystore
+keystore.properties
+
+# Firebase (regenerate locally from Console)
+app/google-services.json
+
+# OS
+.DS_Store
+Thumbs.db

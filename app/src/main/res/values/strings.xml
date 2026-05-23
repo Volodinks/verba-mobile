@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Verba</string>
+
+    <!-- Login -->
+    <string name="login_title">Verba</string>
+    <string name="login_subtitle">Уроки англійської</string>
+    <string name="login_button">Увійти через Google</string>
+    <string name="login_cancelled">Вхід скасовано</string>
+    <string name="login_no_google_account">Додайте Google-акаунт у налаштуваннях пристрою</string>
+    <string name="login_network_error">Не вдалося увійти. Спробуйте пізніше</string>
+    <string name="login_retry">Спробувати ще</string>
+
+    <!-- Access denied -->
+    <string name="access_denied_title">Доступ не надано</string>
+    <string name="access_denied_body">Ваш email не доданий до списку дозволених. Зверніться до адміністратора.</string>
+    <string name="access_denied_signed_in_as">Ви увійшли як:</string>
+    <string name="sign_out">Вийти</string>
+
+    <!-- Lesson list -->
+    <string name="lessons_title">Мої уроки</string>
+    <string name="lessons_empty">Уроків ще немає. Адмін додасть їх через веб.</string>
+    <string name="lessons_load_error">Не вдалося завантажити уроки</string>
+    <string name="lessons_retry">Спробувати ще</string>
+
+    <!-- Lesson detail -->
+    <string name="lesson_detail_title">Урок</string>
+    <string name="lesson_not_found">Урок недоступний</string>
+    <string name="back_to_list">Повернутися до списку</string>
+    <string name="speak">Озвучити</string>
+    <string name="speak_stop">Зупинити</string>
+    <string name="speak_unavailable">English TTS недоступний</string>
+    <string name="listen">Сказати</string>
+    <string name="listen_active">Слухаю…</string>
+    <string name="listen_unavailable">Розпізнавання голосу недоступне</string>
+    <string name="recognized_placeholder">Тут зʼявиться розпізнаний текст</string>
+
+    <!-- Permissions -->
+    <string name="mic_permission_required">Потрібен доступ до мікрофона</string>
+    <string name="mic_permission_denied_permanently">Дозвіл на мікрофон вимкнено. Відкрийте налаштування застосунку, щоб увімкнути.</string>
+    <string name="open_settings">Налаштування</string>
+
+    <!-- STT errors -->
+    <string name="stt_error_no_match">Нічого не розпізнано, спробуйте ще</string>
+    <string name="stt_error_network">Потрібен інтернет для розпізнавання</string>
+    <string name="stt_error_generic">Помилка розпізнавання</string>
+</resources>
