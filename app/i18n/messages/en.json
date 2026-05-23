@@ -1,0 +1,274 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "create": "Create",
+    "creating": "Creating…",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next →",
+    "finish": "Finish",
+    "yes": "yes",
+    "no": "no"
+  },
+  "header": {
+    "appName": "Verba",
+    "admin": "Admin",
+    "backToPlayer": "← Player",
+    "signOut": "Sign out",
+    "language": "Language"
+  },
+  "login": {
+    "subtitle": "Sign in to view your lessons.",
+    "signInWithGoogle": "Sign in with Google",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "popupClosed": "Sign-in cancelled.",
+    "genericError": "Sign-in failed. Please try again later."
+  },
+  "accessDenied": {
+    "title": "Access denied",
+    "message": "Your email is not on the allowed list. Contact an admin.",
+    "adminOnly": "This page is for admins only.",
+    "signOut": "Sign out"
+  },
+  "catalog": {
+    "title": "Catalog",
+    "empty": "The catalog is empty. An admin needs to create folders and lessons.",
+    "loadError": "Failed to load the catalog.",
+    "folders": "Folders",
+    "lessons": "Lessons",
+    "folderEmpty": "Empty.",
+    "notFound": "Folder not found.",
+    "lessonCount": "{count, plural, =0 {no lessons} one {# lesson} other {# lessons}}"
+  },
+  "lesson": {
+    "loadError": "Failed to load the lesson.",
+    "settingsHeader": "Current settings (inherited)",
+    "settingsNotSet": "No settings configured. You'll need to choose them before starting.",
+    "start": "Start"
+  },
+  "start": {
+    "subtitle": "Session settings",
+    "missingRequired": "You must set: {fields}.",
+    "lessonSettings": "Lesson settings",
+    "feedbackMode": "Feedback mode",
+    "feedbackImmediate": "Immediate",
+    "feedbackEnd": "At the end",
+    "taskCount": "Number of tasks",
+    "submit": "Start",
+    "submitting": "Starting…"
+  },
+  "run": {
+    "loadError": "Failed to load the session.",
+    "progress": "Task {current} / {total}",
+    "finishEarly": "Finish early",
+    "generating": "Generating task…",
+    "correct": "Correct!",
+    "incorrect": "Incorrect.",
+    "submit": "Submit",
+    "submitting": "Checking…",
+    "next": "Next →",
+    "finish": "Finish",
+    "finishing": "Finishing…"
+  },
+  "result": {
+    "loadError": "Failed to finish the session.",
+    "computing": "Calculating results…",
+    "title": "Result",
+    "totalTasks": "Tasks",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "accuracy": "Accuracy",
+    "avgTime": "Avg time",
+    "totalTime": "Total",
+    "bySkill": "By skill",
+    "byDistractor": "By distractor type",
+    "mistakes": "Mistakes",
+    "yourAnswer": "Your answer:",
+    "correctAnswer": "Correct:",
+    "backToCatalog": "Back to catalog"
+  },
+  "admin": {
+    "users": {
+      "title": "Users",
+      "email": "Email",
+      "role": "Role",
+      "add": "Add",
+      "empty": "The list is empty.",
+      "addedBy": "added by {by}",
+      "confirmRemove": "Remove {email}?"
+    },
+    "folders": {
+      "title": "Catalog",
+      "newRootLabel": "Root folder name",
+      "addRoot": "Add root",
+      "treeEmpty": "Empty. Create a root folder.",
+      "editTitle": "Edit folder",
+      "name": "Name",
+      "parent": "Parent folder",
+      "rootOption": "— root —",
+      "universalSettings": "Universal settings",
+      "tooltipEdit": "Edit",
+      "tooltipAddSubfolder": "Add subfolder",
+      "tooltipAddLesson": "Add lesson",
+      "tooltipDelete": "Delete",
+      "promptSubfolderName": "Name of the new subfolder:",
+      "confirmDelete": "Delete this folder? (If not empty — operation will be rejected.)",
+      "confirmForceDelete": "Folder is not empty. Delete RECURSIVELY with all contents?",
+      "loadError": "Failed to load the catalog."
+    },
+    "lessonForm": {
+      "newTitle": "New lesson",
+      "editTitle": "Edit lesson",
+      "inFolder": "In folder: {path}",
+      "titleField": "Title",
+      "descriptionField": "Description",
+      "descriptionFieldOptional": "Description (optional)",
+      "folderField": "Folder",
+      "typeLabel": "Type: {type} (currently the only one)",
+      "mcSettings": "Multiple choice settings",
+      "universalOverride": "Universal override",
+      "universalOverrideOptional": "Universal override (optional — overrides the inherited folder settings)",
+      "missingFolderParam": "Folder param missing.",
+      "folderNotFound": "Folder not found.",
+      "loadError": "Failed to load the data.",
+      "confirmDelete": "Delete lesson \"{title}\"?"
+    }
+  },
+  "settingsEditor": {
+    "notSet": "— not set —",
+    "inherited": "Inherited: {value}",
+    "rowLevel": "Level",
+    "rowVariant": "English variant",
+    "rowRegister": "Register",
+    "rowExplanationLanguage": "Explanation language",
+    "rowDistractors": "Distractors",
+    "rowTopic": "Topic",
+    "rowGrammarFocus": "Grammar focus",
+    "rowCustomVocabulary": "Vocabulary (comma-separated)",
+    "rowInterests": "Interests (comma-separated)",
+    "rowExplanationEnabled": "Explanations",
+    "explanationGenerate": "generate",
+    "explanationNotGenerate": "do not generate"
+  },
+  "settingsPreview": {
+    "level": "Level",
+    "variant": "Variant",
+    "register": "Register",
+    "explanationLanguage": "Explanation language",
+    "distractors": "Distractors",
+    "topic": "Topic",
+    "grammarFocus": "Grammar",
+    "customVocabulary": "Vocabulary",
+    "interests": "Interests",
+    "explanationEnabled": "Explanations"
+  },
+  "mcEditor": {
+    "skillTarget": "Tests",
+    "optionsCount": "Number of options",
+    "optionsCountFive": "5 (C1-C2 only)",
+    "presentation": "Presentation",
+    "stemStyle": "Question form"
+  },
+  "labels": {
+    "level": {
+      "A1": "A1 (Beginner)",
+      "A2": "A2 (Elementary)",
+      "B1": "B1 (Intermediate)",
+      "B2": "B2 (Upper-Intermediate)",
+      "C1": "C1 (Advanced)",
+      "C2": "C2 (Proficient)"
+    },
+    "englishVariant": {
+      "british": "British",
+      "american": "American"
+    },
+    "register": {
+      "formal": "Formal",
+      "neutral": "Neutral",
+      "informal": "Informal"
+    },
+    "explanationLanguage": {
+      "english": "English",
+      "ukrainian": "Ukrainian"
+    },
+    "distractorType": {
+      "easy": "Easy",
+      "grammatical": "Grammatical",
+      "semantic_close": "Semantically close",
+      "common_mistake": "Common mistake"
+    },
+    "skillTarget": {
+      "vocabulary": "Vocabulary",
+      "grammar": "Grammar",
+      "collocations": "Collocations",
+      "word_formation": "Word formation",
+      "reading_comprehension": "Reading comprehension"
+    },
+    "presentationFormat": {
+      "isolated_sentences": "Isolated sentences",
+      "connected_text": "Connected text"
+    },
+    "questionStemStyle": {
+      "gap_fill": "Gap-fill",
+      "direct_question": "Direct question"
+    },
+    "feedbackMode": {
+      "immediate": "After each answer",
+      "end": "At the end"
+    },
+    "lessonType": {
+      "multiple_choice": "Multiple choice"
+    },
+    "localeName": {
+      "uk": "Українська",
+      "en": "English"
+    }
+  },
+  "errors": {
+    "missing_token": "No session. Please sign in again.",
+    "invalid_token": "Session invalid. Please sign in again.",
+    "no_email": "Could not determine your email.",
+    "not_allowed": "Your email is not on the allowed list.",
+    "admin_required": "Admin role required.",
+    "invalid_input": "Invalid input.",
+    "invalid_email": "Invalid email format.",
+    "invalid_role": "Invalid role.",
+    "invalid_type_settings": "Invalid lesson type settings.",
+    "invalid_lesson_type_settings": "Invalid lesson type settings.",
+    "missing_required_setting": "Missing required settings: {fields}",
+    "task_count_out_of_range": "Task count is outside the allowed range (1–100).",
+    "options_count_5_requires_c1_c2": "5 options are allowed only for C1 and C2 levels.",
+    "prompt_required": "Prompt is required.",
+    "prompt_too_long": "Prompt is too long.",
+    "folder_not_found": "Folder not found.",
+    "lesson_not_found": "Lesson not found.",
+    "run_not_found": "Session not found.",
+    "task_not_found": "Task not found.",
+    "email_not_found": "Email not found.",
+    "cycle_blocked": "Cannot move a folder into its own descendant.",
+    "folder_not_empty": "Folder is not empty.",
+    "email_already_allowed": "This email is already allowed.",
+    "cannot_remove_self": "You cannot remove your own account.",
+    "run_already_finished": "Session is already finished.",
+    "all_tasks_generated": "All tasks have already been generated.",
+    "already_answered": "This task has already been answered.",
+    "invalid_index_gap": "Invalid task index.",
+    "invalid_index_param": "Invalid index parameter.",
+    "invalid_selected_index": "Invalid selected answer.",
+    "user_never_signed_in": "User has not signed in yet.",
+    "rate_limited": "Too many requests. Try again in a minute.",
+    "generation_failed": "Failed to generate the task.",
+    "timeout": "Request timed out.",
+    "upstream_failed": "External service error.",
+    "openai_not_configured": "OpenAI is not configured.",
+    "owner_required": "Owner is required.",
+    "body_required": "Lesson body is required.",
+    "internal": "Internal server error.",
+    "failed": "Action failed.",
+    "unknown_error": "An error occurred."
+  }
+}

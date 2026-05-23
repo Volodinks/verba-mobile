@@ -12,17 +12,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,13 +36,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.verba.mobile.R
+import com.verba.mobile.VerbaApp
+import com.verba.mobile.locale.LocaleController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,15 +62,19 @@ fun FolderTreeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    BackHandler(enabled = state is FolderTreeUiState.Loaded && (state as FolderTreeUiState.Loaded).currentFolderId != null) {
+    BackHandler(
+        enabled = state is FolderTreeUiState.Loaded &&
+            (state as FolderTreeUiState.Loaded).currentFolderId != null,
+    ) {
         viewModel.goUp()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.lessons_title)) },
+                title = { Text(stringResource(R.string.catalog_title)) },
                 actions = {
+                    LanguageMenu()
                     IconButton(onClick = onSignOut) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Logout,
@@ -71,7 +87,7 @@ fun FolderTreeScreen(
     ) { padding ->
         when (val s = state) {
             FolderTreeUiState.Loading -> CenteredLoading(padding)
-            is FolderTreeUiState.Error -> CenteredError(padding, s.message, onRetry = viewModel::reload)
+            is FolderTreeUiState.Error -> CenteredError(padding, s.message, viewModel::reload)
             is FolderTreeUiState.Loaded -> Loaded(
                 padding = padding,
                 state = s,
@@ -81,6 +97,62 @@ fun FolderTreeScreen(
             )
         }
     }
+}
+
+@Composable
+private fun LanguageMenu() {
+    val context = LocalContext.current
+    val app = context.applicationContext as VerbaApp
+    val activity = remember(context) { context.findActivity() }
+    var expanded by remember { mutableStateOf(false) }
+    val current = remember { LocaleController.current(context) ?: "uk" }
+    val scope = rememberCoroutineScope()
+
+    val change: (String) -> Unit = { tag ->
+        android.util.Log.d("VerbaLocale", "click → tag=$tag, current=${LocaleController.current(context)}")
+        expanded = false
+        scope.launch {
+            app.localePreferences.set(tag)
+            android.util.Log.d("VerbaLocale", "saved to DataStore")
+        }
+        LocaleController.apply(context, tag)
+        android.util.Log.d("VerbaLocale", "after apply: current=${LocaleController.current(context)}")
+        activity?.recreate()
+        android.util.Log.d("VerbaLocale", "recreate() called")
+    }
+
+    IconButton(onClick = {
+        android.util.Log.d("VerbaLocale", "icon clicked, opening menu")
+        expanded = true
+    }) {
+        Icon(
+            imageVector = Icons.Filled.Translate,
+            contentDescription = stringResource(R.string.language_switcher_cd),
+        )
+    }
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        LocaleItem(label = stringResource(R.string.locale_name_uk), active = current == "uk") {
+            change("uk")
+        }
+        LocaleItem(label = stringResource(R.string.locale_name_en), active = current == "en") {
+            change("en")
+        }
+    }
+}
+
+private tailrec fun android.content.Context.findActivity(): android.app.Activity? = when (this) {
+    is android.app.Activity -> this
+    is android.content.ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
+@Composable
+private fun LocaleItem(label: String, active: Boolean, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = { Text(label) },
+        trailingIcon = { if (active) Icon(Icons.Filled.Check, contentDescription = null) },
+        onClick = onClick,
+    )
 }
 
 @Composable
@@ -100,7 +172,7 @@ private fun Loaded(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    stringResource(R.string.folders_empty),
+                    stringResource(R.string.catalog_empty),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -133,10 +205,7 @@ private fun Breadcrumb(items: List<Pair<String?, String>>, onGoUp: () -> Unit) {
     ) {
         OutlinedButton(onClick = onGoUp) { Text("← ${items[items.lastIndex - 1].second}") }
         Spacer(Modifier.width(8.dp))
-        Text(
-            items.last().second,
-            style = MaterialTheme.typography.titleMedium,
-        )
+        Text(items.last().second, style = MaterialTheme.typography.titleMedium)
     }
 }
 
@@ -165,9 +234,13 @@ private fun FolderRow(folder: FolderEntry, onClick: () -> Unit) {
 @Composable
 private fun summary(folder: FolderEntry): String {
     val parts = mutableListOf<String>()
-    if (folder.childrenCount > 0) parts += "${folder.childrenCount} підпапок"
-    if (folder.lessonsCount > 0) parts += "${folder.lessonsCount} уроків"
-    return if (parts.isEmpty()) "порожньо" else parts.joinToString(" · ")
+    if (folder.childrenCount > 0) {
+        parts += pluralStringResource(R.plurals.subfolder_count, folder.childrenCount, folder.childrenCount)
+    }
+    if (folder.lessonsCount > 0) {
+        parts += pluralStringResource(R.plurals.lesson_count, folder.lessonsCount, folder.lessonsCount)
+    }
+    return if (parts.isEmpty()) stringResource(R.string.catalog_folder_empty) else parts.joinToString(" · ")
 }
 
 @Composable
@@ -181,8 +254,7 @@ private fun LessonRow(lesson: LessonEntry, onClick: () -> Unit) {
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(lesson.title, style = MaterialTheme.typography.bodyLarge)
-                val sub = if (!lesson.supported) "Тип уроку не підтримується мобільним"
-                else lesson.description ?: "Multiple choice"
+                val sub = lesson.description ?: stringResource(R.string.label_lesson_type_multiple_choice)
                 Text(
                     sub,
                     style = MaterialTheme.typography.bodyMedium,
@@ -199,22 +271,22 @@ private fun CenteredLoading(padding: PaddingValues) {
 }
 
 @Composable
-private fun CenteredError(padding: PaddingValues, message: String, onRetry: () -> Unit) {
+private fun CenteredError(padding: PaddingValues, detail: String, onRetry: () -> Unit) {
     Box(Modifier.fillMaxSize().padding(padding).padding(24.dp), Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                stringResource(R.string.lessons_load_error),
+                stringResource(R.string.catalog_load_error),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.error,
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                message,
+                detail,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(16.dp))
-            OutlinedButton(onClick = onRetry) { Text(stringResource(R.string.lessons_retry)) }
+            OutlinedButton(onClick = onRetry) { Text(stringResource(R.string.common_retry)) }
         }
     }
 }

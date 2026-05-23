@@ -19,12 +19,14 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.VerbaMobile"
         tools:targetApi="34">
 
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|fontScale|uiMode"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.VerbaMobile">

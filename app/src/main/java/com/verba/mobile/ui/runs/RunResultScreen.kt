@@ -33,6 +33,9 @@ import com.verba.mobile.data.api.CompleteRunResponse
 import com.verba.mobile.data.model.SkillBreakdownEntry
 import com.verba.mobile.data.model.Statistics
 import com.verba.mobile.data.model.StatisticsMistake
+import com.verba.mobile.ui.errors.uiErrorMessage
+import com.verba.mobile.ui.labels.labelForRawDistractor
+import com.verba.mobile.ui.labels.labelForRawSkill
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,16 +52,31 @@ fun RunResultScreen(
             RunResultUiState.Loading -> Box(
                 Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        stringResource(R.string.result_computing),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
 
             is RunResultUiState.Error -> Box(
                 Modifier.fillMaxSize().padding(padding).padding(24.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(s.message, color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.result_load_error), color = MaterialTheme.colorScheme.error)
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        uiErrorMessage(s.error),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                     Spacer(Modifier.height(12.dp))
-                    OutlinedButton(onClick = viewModel::load) { Text(stringResource(R.string.lessons_retry)) }
+                    OutlinedButton(onClick = viewModel::load) { Text(stringResource(R.string.common_retry)) }
                 }
             }
 
@@ -79,12 +97,20 @@ private fun Body(padding: PaddingValues, data: CompleteRunResponse, onDone: () -
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         SummaryCard(stat)
-        if (stat.breakdown_by_skill.isNotEmpty()) BreakdownCard(stringResource(R.string.breakdown_by_skill), stat.breakdown_by_skill)
-        if (stat.breakdown_by_distractor.isNotEmpty()) BreakdownCard(stringResource(R.string.breakdown_by_distractor), stat.breakdown_by_distractor)
+        if (stat.breakdown_by_skill.isNotEmpty()) BreakdownCard(
+            title = stringResource(R.string.result_by_skill),
+            breakdown = stat.breakdown_by_skill,
+            kind = BreakdownKind.SKILL,
+        )
+        if (stat.breakdown_by_distractor.isNotEmpty()) BreakdownCard(
+            title = stringResource(R.string.result_by_distractor),
+            breakdown = stat.breakdown_by_distractor,
+            kind = BreakdownKind.DISTRACTOR,
+        )
         if (stat.mistakes.isNotEmpty()) MistakesCard(stat.mistakes)
 
         Button(onClick = onDone, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.back_to_lessons))
+            Text(stringResource(R.string.result_back_to_catalog))
         }
     }
 }
@@ -98,11 +124,11 @@ private fun SummaryCard(stat: Statistics) {
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
-                "Вірно ${stat.correct} з ${stat.total_tasks}",
+                stringResource(R.string.result_summary_correct, stat.correct, stat.total_tasks),
                 style = MaterialTheme.typography.bodyLarge,
             )
             Text(
-                "Середній час на завдання: ${stat.avg_time_per_task_ms / 1000}s",
+                stringResource(R.string.result_avg_time, (stat.avg_time_per_task_ms / 1000).toInt()),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -110,13 +136,23 @@ private fun SummaryCard(stat: Statistics) {
     }
 }
 
+private enum class BreakdownKind { SKILL, DISTRACTOR }
+
 @Composable
-private fun BreakdownCard(title: String, breakdown: Map<String, SkillBreakdownEntry>) {
+private fun BreakdownCard(
+    title: String,
+    breakdown: Map<String, SkillBreakdownEntry>,
+    kind: BreakdownKind,
+) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(title, style = MaterialTheme.typography.titleMedium)
             for ((key, entry) in breakdown) {
-                Text("$key: ${entry.correct}/${entry.total} (${(entry.accuracy * 100).toInt()}%)")
+                val displayKey = when (kind) {
+                    BreakdownKind.SKILL -> labelForRawSkill(key) ?: key
+                    BreakdownKind.DISTRACTOR -> labelForRawDistractor(key) ?: key
+                }
+                Text("$displayKey: ${entry.correct}/${entry.total} (${(entry.accuracy * 100).toInt()}%)")
             }
         }
     }
@@ -126,7 +162,7 @@ private fun BreakdownCard(title: String, breakdown: Map<String, SkillBreakdownEn
 private fun MistakesCard(mistakes: List<StatisticsMistake>) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.mistakes_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.result_mistakes), style = MaterialTheme.typography.titleMedium)
             for (m in mistakes) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(m.stem, style = MaterialTheme.typography.bodyMedium)

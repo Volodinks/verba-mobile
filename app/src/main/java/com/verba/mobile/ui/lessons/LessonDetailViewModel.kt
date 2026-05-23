@@ -10,6 +10,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.verba.mobile.VerbaApp
 import com.verba.mobile.data.api.ApiResult
 import com.verba.mobile.data.api.LessonDetailResponse
+import com.verba.mobile.ui.errors.UiError
+import com.verba.mobile.ui.errors.toUiError
 import com.verba.mobile.ui.navigation.Routes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 sealed interface LessonDetailUiState {
     data object Loading : LessonDetailUiState
     data class Loaded(val data: LessonDetailResponse) : LessonDetailUiState
-    data class Error(val message: String) : LessonDetailUiState
+    data class Error(val error: UiError) : LessonDetailUiState
 }
 
 class LessonDetailViewModel(
@@ -39,12 +41,8 @@ class LessonDetailViewModel(
             _state.value = LessonDetailUiState.Loading
             _state.value = when (val r = lessonsApi.getLesson(lessonId)) {
                 is ApiResult.Success -> LessonDetailUiState.Loaded(r.value)
-                is ApiResult.Error -> LessonDetailUiState.Error(
-                    "HTTP ${r.status}${r.code?.let { " · $it" } ?: ""}"
-                )
-                is ApiResult.Network -> LessonDetailUiState.Error(
-                    "Мережева помилка: ${r.cause.message ?: r.cause::class.simpleName}"
-                )
+                is ApiResult.Error -> LessonDetailUiState.Error(r.toUiError())
+                is ApiResult.Network -> LessonDetailUiState.Error(r.toUiError())
             }
         }
     }

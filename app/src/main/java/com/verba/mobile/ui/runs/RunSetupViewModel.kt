@@ -17,6 +17,8 @@ import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.Level
 import com.verba.mobile.data.model.Register
 import com.verba.mobile.data.model.UniversalSettings
+import com.verba.mobile.ui.errors.UiError
+import com.verba.mobile.ui.errors.toUiError
 import com.verba.mobile.ui.navigation.Routes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +28,7 @@ import kotlinx.coroutines.launch
 
 data class RunSetupUiState(
     val loadingLesson: Boolean = true,
-    val loadError: String? = null,
+    val loadError: UiError? = null,
     val taskCount: Int = 5,
     val feedbackMode: FeedbackMode = FeedbackMode.IMMEDIATE,
     val level: Level? = null,
@@ -35,7 +37,7 @@ data class RunSetupUiState(
     val explanationLanguage: ExplanationLanguage? = null,
     val distractorTypes: Set<DistractorType> = emptySet(),
     val creating: Boolean = false,
-    val errorMessage: String? = null,
+    val createError: UiError? = null,
     val createdRunId: String? = null,
 ) {
     val canStart: Boolean
@@ -74,24 +76,14 @@ class RunSetupViewModel(
                         )
                     }
                 }
-                is ApiResult.Error -> _state.update {
-                    it.copy(loadingLesson = false, loadError = "HTTP ${r.status}${r.code?.let { c -> " · $c" } ?: ""}")
-                }
-                is ApiResult.Network -> _state.update {
-                    it.copy(loadingLesson = false, loadError = "Мережа: ${r.cause.message ?: r.cause::class.simpleName}")
-                }
+                is ApiResult.Error -> _state.update { it.copy(loadingLesson = false, loadError = r.toUiError()) }
+                is ApiResult.Network -> _state.update { it.copy(loadingLesson = false, loadError = r.toUiError()) }
             }
         }
     }
 
-    fun setTaskCount(value: Int) {
-        _state.update { it.copy(taskCount = value.coerceIn(1, 100)) }
-    }
-
-    fun setFeedbackMode(mode: FeedbackMode) {
-        _state.update { it.copy(feedbackMode = mode) }
-    }
-
+    fun setTaskCount(value: Int) { _state.update { it.copy(taskCount = value.coerceIn(1, 100)) } }
+    fun setFeedbackMode(mode: FeedbackMode) { _state.update { it.copy(feedbackMode = mode) } }
     fun setLevel(v: Level) { _state.update { it.copy(level = v) } }
     fun setEnglishVariant(v: EnglishVariant) { _state.update { it.copy(englishVariant = v) } }
     fun setRegister(v: Register) { _state.update { it.copy(register = v) } }
@@ -108,7 +100,7 @@ class RunSetupViewModel(
         val s = _state.value
         if (!s.canStart) return
         viewModelScope.launch {
-            _state.update { it.copy(creating = true, errorMessage = null) }
+            _state.update { it.copy(creating = true, createError = null) }
             val override = UniversalSettings(
                 level = s.level,
                 english_variant = s.englishVariant,
@@ -125,32 +117,20 @@ class RunSetupViewModel(
             when (val r = runsApi.create(req)) {
                 is ApiResult.Success ->
                     _state.update { it.copy(creating = false, createdRunId = r.value.id) }
-                is ApiResult.Error -> {
-                    val tail = r.raw.take(400).ifBlank { "(empty body)" }
-                    _state.update {
-                        it.copy(
-                            creating = false,
-                            errorMessage = "HTTP ${r.status}${r.code?.let { c -> " · $c" } ?: ""}\n$tail",
-                        )
-                    }
-                }
-                is ApiResult.Network ->
-                    _state.update { it.copy(creating = false, errorMessage = "Мережа: ${r.cause.message ?: r.cause::class.simpleName}") }
+                is ApiResult.Error -> _state.update { it.copy(creating = false, createError = r.toUiError()) }
+                is ApiResult.Network -> _state.update { it.copy(creating = false, createError = r.toUiError()) }
             }
         }
     }
 
-    fun consumeCreatedRunId() {
-        _state.update { it.copy(createdRunId = null) }
-    }
+    fun consumeCreatedRunId() { _state.update { it.copy(createdRunId = null) } }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
                 val handle = createSavedStateHandle()
-                val id = handle.get<String>(Routes.ARG_LESSON_ID)
-                    ?: error("Missing lessonId nav arg")
+                val id = handle.get<String>(Routes.ARG_LESSON_ID) ?: error("Missing lessonId nav arg")
                 RunSetupViewModel(app, id)
             }
         }

@@ -43,6 +43,8 @@ import com.verba.mobile.data.model.ExplanationLanguage
 import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.Level
 import com.verba.mobile.data.model.Register
+import com.verba.mobile.ui.errors.uiErrorMessage
+import com.verba.mobile.ui.labels.label as labelOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +66,7 @@ fun RunSetupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.run_setup_title)) },
+                title = { Text(stringResource(R.string.start_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
@@ -84,9 +86,9 @@ fun RunSetupScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(state.loadError!!, color = MaterialTheme.colorScheme.error)
+                    Text(uiErrorMessage(state.loadError!!), color = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.height(12.dp))
-                    OutlinedButton(onClick = viewModel::loadLesson) { Text(stringResource(R.string.lessons_retry)) }
+                    OutlinedButton(onClick = viewModel::loadLesson) { Text(stringResource(R.string.common_retry)) }
                 }
             }
 
@@ -96,7 +98,11 @@ fun RunSetupScreen(
 }
 
 @Composable
-private fun Form(state: RunSetupUiState, vm: RunSetupViewModel, padding: androidx.compose.foundation.layout.PaddingValues) {
+private fun Form(
+    state: RunSetupUiState,
+    vm: RunSetupViewModel,
+    padding: androidx.compose.foundation.layout.PaddingValues,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +111,7 @@ private fun Form(state: RunSetupUiState, vm: RunSetupViewModel, padding: android
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SectionLabel(stringResource(R.string.run_setup_count_label))
+        SectionLabel(stringResource(R.string.start_task_count))
         OutlinedTextField(
             value = state.taskCount.toString(),
             onValueChange = { txt -> txt.toIntOrNull()?.let { vm.setTaskCount(it) } },
@@ -114,92 +120,76 @@ private fun Form(state: RunSetupUiState, vm: RunSetupViewModel, padding: android
             label = { Text("1..100") },
         )
 
-        SectionLabel(stringResource(R.string.run_setup_feedback_label))
+        SectionLabel(stringResource(R.string.start_feedback_mode))
         ChipRow {
             FilterChip(
                 selected = state.feedbackMode == FeedbackMode.IMMEDIATE,
                 onClick = { vm.setFeedbackMode(FeedbackMode.IMMEDIATE) },
-                label = { Text(stringResource(R.string.feedback_immediate)) },
+                label = { Text(stringResource(R.string.start_feedback_immediate)) },
             )
             FilterChip(
                 selected = state.feedbackMode == FeedbackMode.END,
                 onClick = { vm.setFeedbackMode(FeedbackMode.END) },
-                label = { Text(stringResource(R.string.feedback_end)) },
+                label = { Text(stringResource(R.string.start_feedback_end)) },
             )
         }
 
-        SectionLabel("Рівень${if (state.level == null) " *" else ""}")
+        SectionLabel(stringResource(R.string.start_section_level) + requiredMark(state.level == null))
         ChipRow {
             Level.entries.forEach { lv ->
                 FilterChip(
                     selected = state.level == lv,
                     onClick = { vm.setLevel(lv) },
-                    label = { Text(lv.name) },
+                    label = { Text(labelOf(lv)) },
                 )
             }
         }
 
-        SectionLabel("Варіант англ.${if (state.englishVariant == null) " *" else ""}")
+        SectionLabel(stringResource(R.string.start_section_english_variant) + requiredMark(state.englishVariant == null))
         ChipRow {
-            FilterChip(
-                selected = state.englishVariant == EnglishVariant.BRITISH,
-                onClick = { vm.setEnglishVariant(EnglishVariant.BRITISH) },
-                label = { Text("British") },
-            )
-            FilterChip(
-                selected = state.englishVariant == EnglishVariant.AMERICAN,
-                onClick = { vm.setEnglishVariant(EnglishVariant.AMERICAN) },
-                label = { Text("American") },
-            )
+            EnglishVariant.entries.forEach { v ->
+                FilterChip(
+                    selected = state.englishVariant == v,
+                    onClick = { vm.setEnglishVariant(v) },
+                    label = { Text(labelOf(v)) },
+                )
+            }
         }
 
-        SectionLabel("Регістр${if (state.register == null) " *" else ""}")
+        SectionLabel(stringResource(R.string.start_section_register) + requiredMark(state.register == null))
         ChipRow {
-            FilterChip(
-                selected = state.register == Register.FORMAL,
-                onClick = { vm.setRegister(Register.FORMAL) },
-                label = { Text("Formal") },
-            )
-            FilterChip(
-                selected = state.register == Register.NEUTRAL,
-                onClick = { vm.setRegister(Register.NEUTRAL) },
-                label = { Text("Neutral") },
-            )
-            FilterChip(
-                selected = state.register == Register.INFORMAL,
-                onClick = { vm.setRegister(Register.INFORMAL) },
-                label = { Text("Informal") },
-            )
+            Register.entries.forEach { r ->
+                FilterChip(
+                    selected = state.register == r,
+                    onClick = { vm.setRegister(r) },
+                    label = { Text(labelOf(r)) },
+                )
+            }
         }
 
-        SectionLabel("Мова пояснень${if (state.explanationLanguage == null) " *" else ""}")
+        SectionLabel(stringResource(R.string.start_section_explanation_language) + requiredMark(state.explanationLanguage == null))
         ChipRow {
-            FilterChip(
-                selected = state.explanationLanguage == ExplanationLanguage.ENGLISH,
-                onClick = { vm.setExplanationLanguage(ExplanationLanguage.ENGLISH) },
-                label = { Text("English") },
-            )
-            FilterChip(
-                selected = state.explanationLanguage == ExplanationLanguage.UKRAINIAN,
-                onClick = { vm.setExplanationLanguage(ExplanationLanguage.UKRAINIAN) },
-                label = { Text("Ukrainian") },
-            )
+            ExplanationLanguage.entries.forEach { e ->
+                FilterChip(
+                    selected = state.explanationLanguage == e,
+                    onClick = { vm.setExplanationLanguage(e) },
+                    label = { Text(labelOf(e)) },
+                )
+            }
         }
 
-        SectionLabel("Типи дистракторів${if (state.distractorTypes.isEmpty()) " *" else ""}")
+        SectionLabel(stringResource(R.string.start_section_distractor_types) + requiredMark(state.distractorTypes.isEmpty()))
         ChipRow {
             DistractorType.entries.forEach { d ->
                 FilterChip(
                     selected = d in state.distractorTypes,
                     onClick = { vm.toggleDistractor(d) },
-                    label = { Text(d.name.lowercase()) },
+                    label = { Text(labelOf(d)) },
                 )
             }
         }
 
-        state.errorMessage?.let {
-            Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
-        }
+        state.createError?.let { Text(uiErrorMessage(it), color = MaterialTheme.colorScheme.error) }
 
         Spacer(Modifier.height(8.dp))
 
@@ -211,13 +201,17 @@ private fun Form(state: RunSetupUiState, vm: RunSetupViewModel, padding: android
             if (state.creating) {
                 CircularProgressIndicator(modifier = Modifier.height(20.dp).width(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.starting))
+                Text(stringResource(R.string.start_submitting))
             } else {
-                Text(stringResource(R.string.start_lesson))
+                Text(stringResource(R.string.start_submit))
             }
         }
     }
 }
+
+@Composable
+private fun requiredMark(show: Boolean): String =
+    if (show) stringResource(R.string.start_required_marker) else ""
 
 @Composable
 private fun SectionLabel(text: String) {

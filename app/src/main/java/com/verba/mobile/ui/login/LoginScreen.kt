@@ -59,16 +59,16 @@ fun LoginScreen(
                 CircularProgressIndicator()
             } else {
                 Button(onClick = { viewModel.signIn(context) }) {
-                    Text(stringResource(R.string.login_button))
+                    Text(stringResource(R.string.login_sign_in_with_google))
                 }
             }
 
             Spacer(Modifier.height(16.dp))
 
             val errorMessage: Int? = when (state) {
-                LoginUiState.Cancelled -> R.string.login_cancelled
+                LoginUiState.Cancelled -> R.string.login_popup_closed
                 LoginUiState.NoGoogleAccount -> R.string.login_no_google_account
-                LoginUiState.NetworkError -> R.string.login_network_error
+                LoginUiState.NetworkError -> R.string.login_generic_error
                 else -> null
             }
             if (errorMessage != null) {

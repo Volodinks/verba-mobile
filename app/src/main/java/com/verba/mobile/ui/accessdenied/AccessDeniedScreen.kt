@@ -42,7 +42,7 @@ fun AccessDeniedScreen(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.access_denied_body),
+                text = stringResource(R.string.access_denied_message),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -54,15 +54,10 @@ fun AccessDeniedScreen(
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text(
-                    text = email,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Text(text = email, style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(Modifier.height(32.dp))
-            OutlinedButton(onClick = onSignOut) {
-                Text(stringResource(R.string.sign_out))
-            }
+            OutlinedButton(onClick = onSignOut) { Text(stringResource(R.string.sign_out)) }
         }
     }
 }

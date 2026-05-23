@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.verba.mobile.locale.LocaleController
+import java.util.Locale
+import kotlinx.coroutines.runBlocking
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,6 +37,7 @@ import com.verba.mobile.ui.theme.VerbaTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyStartupLocale()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -44,6 +48,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+private fun MainActivity.applyStartupLocale() {
+    if (LocaleController.current(this) != null) return // already set this process
+    val app = application as VerbaApp
+    val saved = runBlocking { app.localePreferences.get() }
+    val system = Locale.getDefault().language
+    val tag = LocaleController.resolveStartupLocale(saved, system)
+    LocaleController.apply(this, tag)
 }
 
 @Composable

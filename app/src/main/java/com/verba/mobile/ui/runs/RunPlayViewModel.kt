@@ -15,6 +15,8 @@ import com.verba.mobile.data.api.RunsApi
 import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.MultipleChoiceTask
 import com.verba.mobile.data.model.MultipleChoiceUserAnswer
+import com.verba.mobile.ui.errors.UiError
+import com.verba.mobile.ui.errors.toUiError
 import com.verba.mobile.ui.navigation.Routes
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -34,7 +36,7 @@ data class RunPlayUiState(
     val submitting: Boolean = false,
     val feedback: AnswerResponse? = null,
     val finished: Boolean = false,
-    val errorMessage: String? = null,
+    val error: UiError? = null,
 )
 
 class RunPlayViewModel(
@@ -47,7 +49,7 @@ class RunPlayViewModel(
     private val _state = MutableStateFlow(RunPlayUiState())
     val state: StateFlow<RunPlayUiState> = _state.asStateFlow()
 
-    /** Pending prefetch for the NEXT task after the current one. Populated while user is answering. */
+    /** Pending prefetch for the NEXT task after the current one. */
     private var prefetched: Deferred<MultipleChoiceTask?>? = null
 
     init { bootstrap() }
@@ -57,16 +59,11 @@ class RunPlayViewModel(
             when (val r = runsApi.get(runId)) {
                 is ApiResult.Success -> {
                     val run = r.value.run
-                    _state.update {
-                        it.copy(
-                            taskCount = run.task_count,
-                            feedbackMode = run.feedback_mode,
-                        )
-                    }
+                    _state.update { it.copy(taskCount = run.task_count, feedbackMode = run.feedback_mode) }
                     loadCurrent()
                 }
-                is ApiResult.Error -> setError("HTTP ${r.status}${r.code?.let { c -> " · $c" } ?: ""}")
-                is ApiResult.Network -> setError("Мережа: ${r.cause.message ?: r.cause::class.simpleName}")
+                is ApiResult.Error -> setError(r.toUiError())
+                is ApiResult.Network -> setError(r.toUiError())
             }
         }
     }
@@ -77,10 +74,7 @@ class RunPlayViewModel(
             val cached = prefetched?.let { runCatching { it.await() }.getOrNull() }
             prefetched = null
             val task = cached ?: fetchTask(_state.value.currentIndex)
-            if (task == null) {
-                setError("Не вдалося завантажити завдання")
-                return@launch
-            }
+            if (task == null) return@launch // setError already called by fetchTask path
             _state.update { it.copy(currentTask = task, isLoadingTask = false) }
             launchPrefetch()
         }
@@ -95,7 +89,8 @@ class RunPlayViewModel(
     private suspend fun fetchTask(index: Int): MultipleChoiceTask? =
         when (val r = runsApi.nextTask(runId, index)) {
             is ApiResult.Success -> r.value.task
-            is ApiResult.Error, is ApiResult.Network -> null
+            is ApiResult.Error -> { setError(r.toUiError()); null }
+            is ApiResult.Network -> { setError(r.toUiError()); null }
         }
 
     fun selectOption(optionIndex: Int) {
@@ -107,23 +102,19 @@ class RunPlayViewModel(
         val sel = _state.value.selectedOption ?: return
         if (_state.value.submitting) return
         viewModelScope.launch {
-            _state.update { it.copy(submitting = true, errorMessage = null) }
+            _state.update { it.copy(submitting = true, error = null) }
             val req = AnswerRequest(
                 index = _state.value.currentIndex,
                 user_answer = MultipleChoiceUserAnswer(selected_index = sel),
             )
             when (val r = runsApi.answer(runId, req)) {
-                is ApiResult.Success ->
-                    _state.update { it.copy(submitting = false, feedback = r.value) }
-                is ApiResult.Error ->
-                    setError("HTTP ${r.status}${r.code?.let { c -> " · $c" } ?: ""}")
-                is ApiResult.Network ->
-                    setError("Мережа: ${r.cause.message ?: r.cause::class.simpleName}")
+                is ApiResult.Success -> _state.update { it.copy(submitting = false, feedback = r.value) }
+                is ApiResult.Error -> setError(r.toUiError())
+                is ApiResult.Network -> setError(r.toUiError())
             }
         }
     }
 
-    /** In `end` mode — skip the per-task feedback and just advance immediately after submit. */
     fun next() {
         val nextIdx = _state.value.currentIndex + 1
         if (nextIdx >= _state.value.taskCount) {
@@ -134,10 +125,8 @@ class RunPlayViewModel(
         loadCurrent()
     }
 
-    private fun setError(msg: String) {
-        _state.update {
-            it.copy(isLoadingTask = false, submitting = false, errorMessage = msg)
-        }
+    private fun setError(error: UiError) {
+        _state.update { it.copy(isLoadingTask = false, submitting = false, error = error) }
     }
 
     companion object {
@@ -145,8 +134,7 @@ class RunPlayViewModel(
             initializer {
                 val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
                 val handle = createSavedStateHandle()
-                val id = handle.get<String>(Routes.ARG_RUN_ID)
-                    ?: error("Missing runId nav arg")
+                val id = handle.get<String>(Routes.ARG_RUN_ID) ?: error("Missing runId nav arg")
                 RunPlayViewModel(app, id)
             }
         }

@@ -3,7 +3,6 @@ package com.verba.mobile.ui.runs
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -39,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.verba.mobile.R
 import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.MultipleChoiceTask
+import com.verba.mobile.ui.errors.uiErrorMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,8 +56,8 @@ fun RunPlayScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    val count = (state.currentIndex + 1).coerceAtMost(state.taskCount)
-                    Text("$count / ${state.taskCount.coerceAtLeast(1)}")
+                    val current = (state.currentIndex + 1).coerceAtMost(state.taskCount.coerceAtLeast(1))
+                    Text(stringResource(R.string.run_progress, current, state.taskCount.coerceAtLeast(1)))
                 },
             )
         },
@@ -66,12 +65,12 @@ fun RunPlayScreen(
         val taskCount = state.taskCount.coerceAtLeast(1)
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
             LinearProgressIndicator(
-                progress = { (state.currentIndex.coerceAtLeast(0)).toFloat() / taskCount.toFloat() },
+                progress = { state.currentIndex.coerceAtLeast(0).toFloat() / taskCount.toFloat() },
                 modifier = Modifier.fillMaxWidth(),
             )
 
             when {
-                state.errorMessage != null -> ErrorBlock(state.errorMessage!!)
+                state.error != null -> ErrorBlock(uiErrorMessage(state.error!!))
                 state.currentTask == null || state.isLoadingTask -> Loading()
                 else -> TaskBody(
                     state = state,
@@ -97,19 +96,17 @@ private fun TaskBody(
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(task.stem, style = MaterialTheme.typography.titleLarge)
-
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(12.dp))
 
         for ((i, option) in task.options.withIndex()) {
             OptionItem(
                 text = option,
-                selected = state.selectedOption == i,
                 state = optionState(state, task, i),
                 onClick = { onSelect(i) },
             )
+            Spacer(Modifier.height(8.dp))
         }
 
         Spacer(Modifier.height(8.dp))
@@ -123,19 +120,19 @@ private fun TaskBody(
                 if (state.submitting) {
                     CircularProgressIndicator(modifier = Modifier.height(20.dp))
                 } else {
-                    Text(stringResource(R.string.submit_answer))
+                    Text(stringResource(R.string.run_submit))
                 }
             }
             else -> {
                 if (state.feedbackMode == FeedbackMode.IMMEDIATE) {
-                    val correct = state.feedback.is_correct == true
+                    val correct = state.feedback!!.is_correct == true
                     Text(
-                        text = if (correct) stringResource(R.string.feedback_correct)
-                        else stringResource(R.string.feedback_incorrect),
+                        text = if (correct) stringResource(R.string.run_correct)
+                        else stringResource(R.string.run_incorrect),
                         color = if (correct) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    state.feedback.explanation?.let {
+                    state.feedback!!.explanation?.let {
                         Text(it, style = MaterialTheme.typography.bodyMedium)
                     }
                     Spacer(Modifier.height(8.dp))
@@ -143,8 +140,8 @@ private fun TaskBody(
                 Button(onClick = onNext, modifier = Modifier.fillMaxWidth()) {
                     val isLast = state.currentIndex + 1 >= state.taskCount
                     Text(
-                        if (isLast) stringResource(R.string.see_result)
-                        else stringResource(R.string.next_task),
+                        if (isLast) stringResource(R.string.run_see_result)
+                        else stringResource(R.string.run_next),
                     )
                 }
             }
@@ -169,7 +166,6 @@ private fun optionState(state: RunPlayUiState, task: MultipleChoiceTask, index: 
 @Composable
 private fun OptionItem(
     text: String,
-    selected: Boolean,
     state: OptionVisualState,
     onClick: () -> Unit,
 ) {
@@ -200,14 +196,30 @@ private fun OptionItem(
 
 @Composable
 private fun Loading() {
-    Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+    Box(Modifier.fillMaxSize(), Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator()
+            Spacer(Modifier.height(12.dp))
+            Text(
+                stringResource(R.string.run_generating),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
 }
 
 @Composable
-private fun ErrorBlock(msg: String) {
+private fun ErrorBlock(message: String) {
     Box(Modifier.fillMaxSize().padding(24.dp), Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(msg, color = MaterialTheme.colorScheme.error)
+            Text(stringResource(R.string.run_load_error), color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                message,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }

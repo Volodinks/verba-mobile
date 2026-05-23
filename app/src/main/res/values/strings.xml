@@ -2,54 +2,191 @@
 <resources>
     <string name="app_name">Verba</string>
 
+    <!-- Common -->
+    <string name="common_loading">Завантаження…</string>
+    <string name="common_back">Назад</string>
+    <string name="common_next">Далі →</string>
+    <string name="common_finish">Завершити</string>
+    <string name="common_retry">Спробувати ще</string>
+
     <!-- Login -->
     <string name="login_title">Verba</string>
-    <string name="login_subtitle">Уроки англійської</string>
-    <string name="login_button">Увійти через Google</string>
-    <string name="login_cancelled">Вхід скасовано</string>
-    <string name="login_no_google_account">Додайте Google-акаунт у налаштуваннях пристрою</string>
-    <string name="login_network_error">Не вдалося увійти. Спробуйте пізніше</string>
-    <string name="login_retry">Спробувати ще</string>
+    <string name="login_subtitle">Увійдіть, щоб переглядати свої уроки.</string>
+    <string name="login_sign_in_with_google">Увійти через Google</string>
+    <string name="login_session_expired">Сесія завершилась. Увійдіть знову.</string>
+    <string name="login_popup_closed">Вхід скасовано.</string>
+    <string name="login_no_google_account">Додайте Google-акаунт у налаштуваннях пристрою.</string>
+    <string name="login_generic_error">Не вдалося увійти. Спробуйте пізніше.</string>
 
     <!-- Access denied -->
     <string name="access_denied_title">Доступ не надано</string>
-    <string name="access_denied_body">Ваш email не доданий до списку дозволених. Зверніться до адміністратора.</string>
+    <string name="access_denied_message">Ваш email не у списку дозволених. Зверніться до адміна.</string>
     <string name="access_denied_signed_in_as">Ви увійшли як:</string>
     <string name="sign_out">Вийти</string>
 
-    <!-- Folder tree -->
-    <string name="lessons_title">Уроки</string>
-    <string name="folders_empty">Тут поки порожньо. Адмін додасть каталоги і уроки через веб.</string>
-    <string name="lessons_load_error">Не вдалося завантажити</string>
-    <string name="lessons_retry">Спробувати ще</string>
+    <!-- Catalog (folder tree) -->
+    <string name="catalog_title">Уроки</string>
+    <string name="catalog_empty">Каталог порожній. Адмін має створити каталоги і уроки.</string>
+    <string name="catalog_load_error">Не вдалося завантажити каталог.</string>
+    <string name="catalog_folder_empty">Порожньо.</string>
+    <string name="catalog_subfolders_label">підпапок:</string>
 
     <!-- Lesson detail -->
-    <string name="lesson_detail_title">Урок</string>
-    <string name="effective_settings_title">Налаштування рівня</string>
-    <string name="effective_settings_incomplete">Не всі обов\'язкові поля заповнені — урок не запуститься</string>
-    <string name="type_settings_title">Налаштування типу</string>
-    <string name="start_lesson">Почати урок</string>
-    <string name="lesson_missing_settings">Урок не готовий до запуску</string>
+    <string name="lesson_title">Урок</string>
+    <string name="lesson_load_error">Не вдалося завантажити урок.</string>
+    <string name="lesson_settings_header">Поточні налаштування (успадковані)</string>
+    <string name="lesson_settings_not_set">Налаштування не задано. Доведеться обрати на старті.</string>
+    <string name="lesson_type_settings_header">Налаштування типу</string>
+    <string name="lesson_start">Старт</string>
+    <string name="lesson_needs_on_next">На наступному кроці треба буде встановити: %1$s</string>
 
     <!-- Run setup -->
-    <string name="run_setup_title">Налаштування сесії</string>
-    <string name="run_setup_count_label">Кількість завдань</string>
-    <string name="run_setup_feedback_label">Зворотний звʼязок</string>
-    <string name="feedback_immediate">Одразу</string>
-    <string name="feedback_end">У кінці</string>
-    <string name="starting">Стартую…</string>
+    <string name="start_title">Налаштування сесії</string>
+    <string name="start_missing_required">Обовʼязково задайте: %1$s.</string>
+    <string name="start_feedback_mode">Режим зворотного звʼязку</string>
+    <string name="start_feedback_immediate">Одразу</string>
+    <string name="start_feedback_end">У кінці</string>
+    <string name="start_task_count">Кількість завдань</string>
+    <string name="start_submit">Стартувати</string>
+    <string name="start_submitting">Стартую…</string>
+    <string name="start_required_marker"> *</string>
+    <string name="start_section_level">Рівень</string>
+    <string name="start_section_english_variant">Варіант англ.</string>
+    <string name="start_section_register">Регістр</string>
+    <string name="start_section_explanation_language">Мова пояснень</string>
+    <string name="start_section_distractor_types">Типи дистракторів</string>
 
     <!-- Run play -->
-    <string name="submit_answer">Відповісти</string>
-    <string name="next_task">Далі</string>
-    <string name="see_result">Подивитись результат</string>
-    <string name="feedback_correct">Правильно</string>
-    <string name="feedback_incorrect">Неправильно</string>
+    <string name="run_load_error">Не вдалося завантажити сесію.</string>
+    <string name="run_progress">Завдання %1$d / %2$d</string>
+    <string name="run_generating">Генерую завдання…</string>
+    <string name="run_correct">Правильно!</string>
+    <string name="run_incorrect">Неправильно.</string>
+    <string name="run_submit">Відповісти</string>
+    <string name="run_submitting">Перевіряю…</string>
+    <string name="run_next">Далі →</string>
+    <string name="run_see_result">Подивитись результат</string>
 
     <!-- Run result -->
     <string name="result_title">Результат</string>
-    <string name="breakdown_by_skill">За навичкою</string>
-    <string name="breakdown_by_distractor">За типом дистрактора</string>
-    <string name="mistakes_title">Помилки</string>
-    <string name="back_to_lessons">До списку уроків</string>
+    <string name="result_load_error">Не вдалося завершити сесію.</string>
+    <string name="result_computing">Підраховую результати…</string>
+    <string name="result_summary_correct">Вірно %1$d з %2$d</string>
+    <string name="result_avg_time">Середній час на завдання: %1$ds</string>
+    <string name="result_by_skill">За навичкою</string>
+    <string name="result_by_distractor">За типом дистрактора</string>
+    <string name="result_mistakes">Помилки</string>
+    <string name="result_back_to_catalog">До каталогу</string>
+
+    <!-- Settings preview labels (used on LessonDetail card) -->
+    <string name="preview_level">Рівень</string>
+    <string name="preview_variant">Варіант</string>
+    <string name="preview_register">Регістр</string>
+    <string name="preview_explanation_language">Мова пояснень</string>
+    <string name="preview_distractors">Дистрактори</string>
+    <string name="preview_topic">Тема</string>
+    <string name="preview_grammar_focus">Граматика</string>
+
+    <!-- Language switcher -->
+    <string name="language_switcher_cd">Змінити мову</string>
+    <string name="locale_name_uk">Українська</string>
+    <string name="locale_name_en">English</string>
+
+    <!-- Mic permission -->
+    <string name="mic_permission_required">Потрібен доступ до мікрофона.</string>
+    <string name="mic_permission_denied_permanently">Дозвіл на мікрофон вимкнено. Відкрийте налаштування застосунку, щоб увімкнути.</string>
+    <string name="open_settings">Налаштування</string>
+
+    <!-- Level labels -->
+    <string name="label_level_a1">A1 (Початковий)</string>
+    <string name="label_level_a2">A2 (Елементарний)</string>
+    <string name="label_level_b1">B1 (Середній)</string>
+    <string name="label_level_b2">B2 (Вище середнього)</string>
+    <string name="label_level_c1">C1 (Просунутий)</string>
+    <string name="label_level_c2">C2 (Володіння)</string>
+
+    <!-- English variant labels -->
+    <string name="label_english_variant_british">Британський</string>
+    <string name="label_english_variant_american">Американський</string>
+
+    <!-- Register labels -->
+    <string name="label_register_formal">Формальний</string>
+    <string name="label_register_neutral">Нейтральний</string>
+    <string name="label_register_informal">Неформальний</string>
+
+    <!-- Explanation language labels -->
+    <string name="label_explanation_language_english">Англійська</string>
+    <string name="label_explanation_language_ukrainian">Українська</string>
+
+    <!-- Distractor type labels -->
+    <string name="label_distractor_easy">Прості</string>
+    <string name="label_distractor_grammatical">Граматичні</string>
+    <string name="label_distractor_semantic_close">Близькі за змістом</string>
+    <string name="label_distractor_common_mistake">Типові помилки</string>
+
+    <!-- Skill target labels -->
+    <string name="label_skill_vocabulary">Лексика</string>
+    <string name="label_skill_grammar">Граматика</string>
+    <string name="label_skill_collocations">Колокації</string>
+    <string name="label_skill_word_formation">Словотвір</string>
+    <string name="label_skill_reading_comprehension">Розуміння тексту</string>
+
+    <!-- Presentation format labels -->
+    <string name="label_presentation_isolated_sentences">Окремі речення</string>
+    <string name="label_presentation_connected_text">Звʼязний текст</string>
+
+    <!-- Question stem style labels -->
+    <string name="label_stem_gap_fill">Заповнити пропуск</string>
+    <string name="label_stem_direct_question">Пряме питання</string>
+
+    <!-- Feedback mode labels (full names — chips use shorter common_feedback_*) -->
+    <string name="label_feedback_immediate">Одразу після відповіді</string>
+    <string name="label_feedback_end">У кінці</string>
+
+    <!-- Lesson type labels -->
+    <string name="label_lesson_type_multiple_choice">Вибір варіанту</string>
+
+    <!-- API error messages -->
+    <string name="error_missing_token">Сесію не визначено. Увійдіть знову.</string>
+    <string name="error_invalid_token">Сесія недійсна. Увійдіть знову.</string>
+    <string name="error_no_email">Не вдалося визначити email.</string>
+    <string name="error_not_allowed">Ваш email не у списку дозволених.</string>
+    <string name="error_admin_required">Потрібні права адміна.</string>
+    <string name="error_invalid_input">Невірний ввід.</string>
+    <string name="error_invalid_email">Невірний формат email.</string>
+    <string name="error_invalid_role">Невірна роль.</string>
+    <string name="error_invalid_type_settings">Невірні налаштування типу уроку.</string>
+    <string name="error_invalid_lesson_type_settings">Невірні налаштування типу уроку.</string>
+    <string name="error_missing_required_setting">Не задано обовʼязкові поля: %1$s</string>
+    <string name="error_task_count_out_of_range">Кількість завдань поза допустимим діапазоном (1–100).</string>
+    <string name="error_options_count_5_requires_c1_c2">5 варіантів доступні лише для рівнів C1 і C2.</string>
+    <string name="error_prompt_required">Промпт обовʼязковий.</string>
+    <string name="error_prompt_too_long">Промпт занадто довгий.</string>
+    <string name="error_folder_not_found">Каталог не знайдено.</string>
+    <string name="error_lesson_not_found">Урок не знайдено.</string>
+    <string name="error_run_not_found">Сесію не знайдено.</string>
+    <string name="error_task_not_found">Завдання не знайдено.</string>
+    <string name="error_email_not_found">Email не знайдено.</string>
+    <string name="error_cycle_blocked">Не можна перенести каталог у власного нащадка.</string>
+    <string name="error_folder_not_empty">Каталог не порожній.</string>
+    <string name="error_email_already_allowed">Цей email уже дозволений.</string>
+    <string name="error_cannot_remove_self">Не можна видалити власний акаунт.</string>
+    <string name="error_run_already_finished">Сесію вже завершено.</string>
+    <string name="error_all_tasks_generated">Усі завдання вже згенеровано.</string>
+    <string name="error_already_answered">На це завдання вже відповіли.</string>
+    <string name="error_invalid_index_gap">Невірний індекс завдання.</string>
+    <string name="error_invalid_index_param">Невірний параметр індекса.</string>
+    <string name="error_invalid_selected_index">Невірна вибрана відповідь.</string>
+    <string name="error_user_never_signed_in">Користувач ще не входив у систему.</string>
+    <string name="error_rate_limited">Забагато запитів. Спробуйте за хвилину.</string>
+    <string name="error_generation_failed">Не вдалося згенерувати завдання.</string>
+    <string name="error_timeout">Час очікування вичерпано.</string>
+    <string name="error_upstream_failed">Помилка зовнішнього сервісу.</string>
+    <string name="error_openai_not_configured">OpenAI не налаштовано.</string>
+    <string name="error_internal">Внутрішня помилка сервера.</string>
+    <string name="error_failed">Не вдалося виконати дію.</string>
+    <string name="error_unknown_error">Сталася помилка.</string>
+    <string name="error_network">Мережева помилка: %1$s</string>
+    <string name="error_parse">Не вдалося розібрати відповідь сервера.</string>
+    <string name="error_http_generic">HTTP %1$d</string>
 </resources>

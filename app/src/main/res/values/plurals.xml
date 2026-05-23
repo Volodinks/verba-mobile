@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lesson_count">
+        <item quantity="one">%d урок</item>
+        <item quantity="few">%d уроки</item>
+        <item quantity="many">%d уроків</item>
+        <item quantity="other">%d уроків</item>
+    </plurals>
+    <plurals name="subfolder_count">
+        <item quantity="one">%d підпапка</item>
+        <item quantity="few">%d підпапки</item>
+        <item quantity="many">%d підпапок</item>
+        <item quantity="other">%d підпапок</item>
+    </plurals>
+</resources>

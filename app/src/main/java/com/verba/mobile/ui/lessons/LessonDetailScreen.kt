@@ -34,7 +34,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.verba.mobile.R
 import com.verba.mobile.data.api.LessonDetailResponse
+import com.verba.mobile.data.model.DistractorType
+import com.verba.mobile.data.model.EnglishVariant
+import com.verba.mobile.data.model.ExplanationLanguage
+import com.verba.mobile.data.model.Level
+import com.verba.mobile.data.model.Register
 import com.verba.mobile.data.model.UniversalSettings
+import com.verba.mobile.ui.errors.uiErrorMessage
+import com.verba.mobile.ui.labels.label
+import com.verba.mobile.ui.labels.labelForRawDistractor
+import com.verba.mobile.ui.labels.labelForRawSkill
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -50,7 +59,7 @@ fun LessonDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.lesson_detail_title)) },
+                title = { Text(stringResource(R.string.lesson_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
@@ -63,9 +72,15 @@ fun LessonDetailScreen(
             LessonDetailUiState.Loading -> Centered(padding) { CircularProgressIndicator() }
             is LessonDetailUiState.Error -> Centered(padding) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(s.message, color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.lesson_load_error), color = MaterialTheme.colorScheme.error)
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        uiErrorMessage(s.error),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                     Spacer(Modifier.height(12.dp))
-                    OutlinedButton(onClick = viewModel::load) { Text(stringResource(R.string.lessons_retry)) }
+                    OutlinedButton(onClick = viewModel::load) { Text(stringResource(R.string.common_retry)) }
                 }
             }
             is LessonDetailUiState.Loaded -> Body(
@@ -101,12 +116,12 @@ private fun Body(padding: PaddingValues, data: LessonDetailResponse, onStart: ()
         TypeSettingsCard(data.lesson.type_settings)
 
         Button(onClick = onStart, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.start_lesson))
+            Text(stringResource(R.string.lesson_start))
         }
         val missing = missingRequiredFields(data.effective_settings)
         if (missing.isNotEmpty()) {
             Text(
-                "На наступному кроці треба буде встановити: ${missing.joinToString()}",
+                stringResource(R.string.lesson_needs_on_next, missing.joinToString()),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -129,19 +144,25 @@ private fun missingRequiredFields(s: UniversalSettings?): List<String> {
 private fun EffectiveSettingsCard(es: UniversalSettings?) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.effective_settings_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.lesson_settings_header), style = MaterialTheme.typography.titleMedium)
             if (es == null) {
-                Text(stringResource(R.string.effective_settings_incomplete), color = MaterialTheme.colorScheme.error)
+                Text(
+                    stringResource(R.string.lesson_settings_not_set),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
                 return@Column
             }
-            es.level?.let { Field("Рівень", it.name) }
-            es.english_variant?.let { Field("Варіант англ.", it.name.lowercase()) }
-            es.register?.let { Field("Регістр", it.name.lowercase()) }
-            es.explanation_language?.let { Field("Мова пояснень", it.name.lowercase()) }
-            es.distractor_types?.takeIf { it.isNotEmpty() }
-                ?.let { Field("Типи дистракторів", it.joinToString { d -> d.name.lowercase() }) }
-            es.topic?.let { Field("Тематика", it) }
-            es.grammar_focus?.let { Field("Граматичний фокус", it) }
+            es.level?.let { Row(stringResource(R.string.preview_level), label(it)) }
+            es.english_variant?.let { Row(stringResource(R.string.preview_variant), label(it)) }
+            es.register?.let { Row(stringResource(R.string.preview_register), label(it)) }
+            es.explanation_language?.let { Row(stringResource(R.string.preview_explanation_language), label(it)) }
+            es.distractor_types?.takeIf { it.isNotEmpty() }?.let { types ->
+                val labels = mutableListOf<String>()
+                for (d in types) labels += label(d)
+                Row(stringResource(R.string.preview_distractors), labels.joinToString())
+            }
+            es.topic?.let { Row(stringResource(R.string.preview_topic), it) }
+            es.grammar_focus?.let { Row(stringResource(R.string.preview_grammar_focus), it) }
         }
     }
 }
@@ -150,21 +171,23 @@ private fun EffectiveSettingsCard(es: UniversalSettings?) {
 private fun TypeSettingsCard(settings: JsonObject) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.type_settings_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.lesson_type_settings_header), style = MaterialTheme.typography.titleMedium)
             for ((k, v) in settings) {
-                val display = (v as? JsonPrimitive)?.content ?: v.toString()
-                Field(k, display)
+                val raw = (v as? JsonPrimitive)?.content ?: v.toString()
+                val displayValue = when (k) {
+                    "skill_target" -> labelForRawSkill(raw) ?: raw
+                    "distractor_type" -> labelForRawDistractor(raw) ?: raw
+                    else -> raw
+                }
+                Row(k, displayValue)
             }
         }
     }
 }
 
 @Composable
-private fun Field(label: String, value: String) {
-    Text(
-        text = "$label: $value",
-        style = MaterialTheme.typography.bodyMedium,
-    )
+private fun Row(label: String, value: String) {
+    Text("$label: $value", style = MaterialTheme.typography.bodyMedium)
 }
 
 @Composable

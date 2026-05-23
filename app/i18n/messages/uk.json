@@ -1,0 +1,274 @@
+{
+  "common": {
+    "loading": "Завантаження…",
+    "save": "Зберегти",
+    "saving": "Зберігаю…",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "create": "Створити",
+    "creating": "Створюю…",
+    "edit": "Редагувати",
+    "back": "Назад",
+    "next": "Далі →",
+    "finish": "Завершити",
+    "yes": "так",
+    "no": "ні"
+  },
+  "header": {
+    "appName": "Verba",
+    "admin": "Адмінка",
+    "backToPlayer": "← Гравець",
+    "signOut": "Вийти",
+    "language": "Мова"
+  },
+  "login": {
+    "subtitle": "Увійдіть, щоб переглядати свої уроки.",
+    "signInWithGoogle": "Увійти через Google",
+    "sessionExpired": "Сесія завершилась. Увійдіть знову.",
+    "popupClosed": "Вхід скасовано.",
+    "genericError": "Не вдалося увійти. Спробуйте пізніше."
+  },
+  "accessDenied": {
+    "title": "Доступ не надано",
+    "message": "Ваш email не у списку дозволених. Зверніться до адміна.",
+    "adminOnly": "Ця сторінка доступна лише адмінам.",
+    "signOut": "Вийти"
+  },
+  "catalog": {
+    "title": "Каталог",
+    "empty": "Каталог порожній. Адмін має створити каталоги і уроки.",
+    "loadError": "Не вдалося завантажити каталог.",
+    "folders": "Каталоги",
+    "lessons": "Уроки",
+    "folderEmpty": "Порожньо.",
+    "notFound": "Каталог не знайдено.",
+    "lessonCount": "{count, plural, =0 {немає уроків} one {# урок} few {# уроки} many {# уроків} other {# уроків}}"
+  },
+  "lesson": {
+    "loadError": "Не вдалося завантажити урок.",
+    "settingsHeader": "Поточні налаштування (успадковані)",
+    "settingsNotSet": "Налаштування не задано. Доведеться обрати на старті.",
+    "start": "Старт"
+  },
+  "start": {
+    "subtitle": "Налаштування сесії",
+    "missingRequired": "Обов'язково задайте: {fields}.",
+    "lessonSettings": "Налаштування уроку",
+    "feedbackMode": "Режим зворотного зв'язку",
+    "feedbackImmediate": "Одразу",
+    "feedbackEnd": "У кінці",
+    "taskCount": "Кількість завдань",
+    "submit": "Стартувати",
+    "submitting": "Стартую…"
+  },
+  "run": {
+    "loadError": "Не вдалося завантажити сесію.",
+    "progress": "Завдання {current} / {total}",
+    "finishEarly": "Завершити достроково",
+    "generating": "Генерую завдання…",
+    "correct": "Правильно!",
+    "incorrect": "Неправильно.",
+    "submit": "Відповісти",
+    "submitting": "Перевіряю…",
+    "next": "Далі →",
+    "finish": "Завершити",
+    "finishing": "Завершення…"
+  },
+  "result": {
+    "loadError": "Не вдалося завершити сесію.",
+    "computing": "Підраховую результати…",
+    "title": "Результат",
+    "totalTasks": "Завдань",
+    "correct": "Правильно",
+    "incorrect": "Неправильно",
+    "accuracy": "Точність",
+    "avgTime": "Сер. час",
+    "totalTime": "Усього",
+    "bySkill": "За навичкою",
+    "byDistractor": "За типом дистрактора",
+    "mistakes": "Помилки",
+    "yourAnswer": "Ваша:",
+    "correctAnswer": "Правильно:",
+    "backToCatalog": "До каталогу"
+  },
+  "admin": {
+    "users": {
+      "title": "Користувачі",
+      "email": "Email",
+      "role": "Роль",
+      "add": "Додати",
+      "empty": "Список порожній.",
+      "addedBy": "доданий {by}",
+      "confirmRemove": "Видалити {email}?"
+    },
+    "folders": {
+      "title": "Каталог",
+      "newRootLabel": "Назва кореневого каталогу",
+      "addRoot": "Додати корінь",
+      "treeEmpty": "Порожньо. Створіть кореневий каталог.",
+      "editTitle": "Редагувати каталог",
+      "name": "Назва",
+      "parent": "Батьківський каталог",
+      "rootOption": "— корінь —",
+      "universalSettings": "Universal settings",
+      "tooltipEdit": "Редагувати",
+      "tooltipAddSubfolder": "Додати підкаталог",
+      "tooltipAddLesson": "Додати урок",
+      "tooltipDelete": "Видалити",
+      "promptSubfolderName": "Назва нового підкаталогу:",
+      "confirmDelete": "Видалити цей каталог? (Якщо непорожній — буде відмова.)",
+      "confirmForceDelete": "Каталог не порожній. Видалити РЕКУРСИВНО разом з усім вмістом?",
+      "loadError": "Не вдалося завантажити каталог."
+    },
+    "lessonForm": {
+      "newTitle": "Новий урок",
+      "editTitle": "Редагувати урок",
+      "inFolder": "У каталозі: {path}",
+      "titleField": "Заголовок",
+      "descriptionField": "Опис",
+      "descriptionFieldOptional": "Опис (опційно)",
+      "folderField": "Каталог",
+      "typeLabel": "Тип: {type} (наразі єдиний)",
+      "mcSettings": "Налаштування multiple_choice",
+      "universalOverride": "Universal override",
+      "universalOverrideOptional": "Universal override (опційно — перекриває успадковані налаштування каталогу)",
+      "missingFolderParam": "Не вказано folder.",
+      "folderNotFound": "Каталог не знайдено.",
+      "loadError": "Не вдалося завантажити дані.",
+      "confirmDelete": "Видалити урок \"{title}\"?"
+    }
+  },
+  "settingsEditor": {
+    "notSet": "— не задано —",
+    "inherited": "Успадковано: {value}",
+    "rowLevel": "Рівень",
+    "rowVariant": "Варіант англійської",
+    "rowRegister": "Регістр",
+    "rowExplanationLanguage": "Мова пояснень",
+    "rowDistractors": "Дистрактори",
+    "rowTopic": "Тема",
+    "rowGrammarFocus": "Граматичний фокус",
+    "rowCustomVocabulary": "Лексика (через кому)",
+    "rowInterests": "Інтереси (через кому)",
+    "rowExplanationEnabled": "Пояснення",
+    "explanationGenerate": "генерувати",
+    "explanationNotGenerate": "не генерувати"
+  },
+  "settingsPreview": {
+    "level": "Рівень",
+    "variant": "Варіант",
+    "register": "Регістр",
+    "explanationLanguage": "Мова пояснень",
+    "distractors": "Дистрактори",
+    "topic": "Тема",
+    "grammarFocus": "Граматика",
+    "customVocabulary": "Лексика",
+    "interests": "Інтереси",
+    "explanationEnabled": "Пояснення"
+  },
+  "mcEditor": {
+    "skillTarget": "Що перевіряє",
+    "optionsCount": "Кількість варіантів",
+    "optionsCountFive": "5 (лише C1-C2)",
+    "presentation": "Подача",
+    "stemStyle": "Форма запитання"
+  },
+  "labels": {
+    "level": {
+      "A1": "A1 (Початковий)",
+      "A2": "A2 (Елементарний)",
+      "B1": "B1 (Середній)",
+      "B2": "B2 (Вище середнього)",
+      "C1": "C1 (Просунутий)",
+      "C2": "C2 (Володіння)"
+    },
+    "englishVariant": {
+      "british": "Британський",
+      "american": "Американський"
+    },
+    "register": {
+      "formal": "Формальний",
+      "neutral": "Нейтральний",
+      "informal": "Неформальний"
+    },
+    "explanationLanguage": {
+      "english": "Англійська",
+      "ukrainian": "Українська"
+    },
+    "distractorType": {
+      "easy": "Прості",
+      "grammatical": "Граматичні",
+      "semantic_close": "Близькі за змістом",
+      "common_mistake": "Типові помилки"
+    },
+    "skillTarget": {
+      "vocabulary": "Лексика",
+      "grammar": "Граматика",
+      "collocations": "Колокації",
+      "word_formation": "Словотвір",
+      "reading_comprehension": "Розуміння тексту"
+    },
+    "presentationFormat": {
+      "isolated_sentences": "Окремі речення",
+      "connected_text": "Зв'язний текст"
+    },
+    "questionStemStyle": {
+      "gap_fill": "Заповнити пропуск",
+      "direct_question": "Пряме питання"
+    },
+    "feedbackMode": {
+      "immediate": "Одразу після відповіді",
+      "end": "У кінці"
+    },
+    "lessonType": {
+      "multiple_choice": "Вибір варіанту"
+    },
+    "localeName": {
+      "uk": "Українська",
+      "en": "English"
+    }
+  },
+  "errors": {
+    "missing_token": "Сесію не визначено. Увійдіть знову.",
+    "invalid_token": "Сесія недійсна. Увійдіть знову.",
+    "no_email": "Не вдалося визначити email.",
+    "not_allowed": "Ваш email не у списку дозволених.",
+    "admin_required": "Потрібні права адміна.",
+    "invalid_input": "Невірний ввід.",
+    "invalid_email": "Невірний формат email.",
+    "invalid_role": "Невірна роль.",
+    "invalid_type_settings": "Невірні налаштування типу уроку.",
+    "invalid_lesson_type_settings": "Невірні налаштування типу уроку.",
+    "missing_required_setting": "Не задано обов'язкові поля: {fields}",
+    "task_count_out_of_range": "Кількість завдань поза допустимим діапазоном (1–100).",
+    "options_count_5_requires_c1_c2": "5 варіантів доступні лише для рівнів C1 і C2.",
+    "prompt_required": "Промпт обов'язковий.",
+    "prompt_too_long": "Промпт занадто довгий.",
+    "folder_not_found": "Каталог не знайдено.",
+    "lesson_not_found": "Урок не знайдено.",
+    "run_not_found": "Сесію не знайдено.",
+    "task_not_found": "Завдання не знайдено.",
+    "email_not_found": "Email не знайдено.",
+    "cycle_blocked": "Не можна перенести каталог у власного нащадка.",
+    "folder_not_empty": "Каталог не порожній.",
+    "email_already_allowed": "Цей email уже дозволений.",
+    "cannot_remove_self": "Не можна видалити власний акаунт.",
+    "run_already_finished": "Сесію вже завершено.",
+    "all_tasks_generated": "Усі завдання вже згенеровано.",
+    "already_answered": "На це завдання вже відповіли.",
+    "invalid_index_gap": "Невірний індекс завдання.",
+    "invalid_index_param": "Невірний параметр індекса.",
+    "invalid_selected_index": "Невірна вибрана відповідь.",
+    "user_never_signed_in": "Користувач ще не входив у систему.",
+    "rate_limited": "Забагато запитів. Спробуйте за хвилину.",
+    "generation_failed": "Не вдалося згенерувати завдання.",
+    "timeout": "Час очікування вичерпано.",
+    "upstream_failed": "Помилка зовнішнього сервісу.",
+    "openai_not_configured": "OpenAI не налаштовано.",
+    "owner_required": "Потрібно вказати власника.",
+    "body_required": "Текст уроку обов'язковий.",
+    "internal": "Внутрішня помилка сервера.",
+    "failed": "Не вдалося виконати дію.",
+    "unknown_error": "Сталася помилка."
+  }
+}

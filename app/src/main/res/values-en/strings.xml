@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Verba</string>
+
+    <!-- Common -->
+    <string name="common_loading">Loading…</string>
+    <string name="common_back">Back</string>
+    <string name="common_next">Next →</string>
+    <string name="common_finish">Finish</string>
+    <string name="common_retry">Retry</string>
+
+    <!-- Login -->
+    <string name="login_title">Verba</string>
+    <string name="login_subtitle">Sign in to view your lessons.</string>
+    <string name="login_sign_in_with_google">Sign in with Google</string>
+    <string name="login_session_expired">Your session has expired. Please sign in again.</string>
+    <string name="login_popup_closed">Sign-in cancelled.</string>
+    <string name="login_no_google_account">Add a Google account in your device settings.</string>
+    <string name="login_generic_error">Sign-in failed. Please try again later.</string>
+
+    <!-- Access denied -->
+    <string name="access_denied_title">Access denied</string>
+    <string name="access_denied_message">Your email is not on the allowed list. Contact an admin.</string>
+    <string name="access_denied_signed_in_as">Signed in as:</string>
+    <string name="sign_out">Sign out</string>
+
+    <!-- Catalog (folder tree) -->
+    <string name="catalog_title">Lessons</string>
+    <string name="catalog_empty">The catalog is empty. An admin needs to create folders and lessons.</string>
+    <string name="catalog_load_error">Failed to load the catalog.</string>
+    <string name="catalog_folder_empty">Empty.</string>
+    <string name="catalog_subfolders_label">subfolders:</string>
+
+    <!-- Lesson detail -->
+    <string name="lesson_title">Lesson</string>
+    <string name="lesson_load_error">Failed to load the lesson.</string>
+    <string name="lesson_settings_header">Current settings (inherited)</string>
+    <string name="lesson_settings_not_set">No settings configured. You\'ll need to choose them before starting.</string>
+    <string name="lesson_type_settings_header">Type settings</string>
+    <string name="lesson_start">Start</string>
+    <string name="lesson_needs_on_next">You\'ll need to set on the next step: %1$s</string>
+
+    <!-- Run setup -->
+    <string name="start_title">Session settings</string>
+    <string name="start_missing_required">You must set: %1$s.</string>
+    <string name="start_feedback_mode">Feedback mode</string>
+    <string name="start_feedback_immediate">Immediate</string>
+    <string name="start_feedback_end">At the end</string>
+    <string name="start_task_count">Number of tasks</string>
+    <string name="start_submit">Start</string>
+    <string name="start_submitting">Starting…</string>
+    <string name="start_required_marker"> *</string>
+    <string name="start_section_level">Level</string>
+    <string name="start_section_english_variant">English variant</string>
+    <string name="start_section_register">Register</string>
+    <string name="start_section_explanation_language">Explanation language</string>
+    <string name="start_section_distractor_types">Distractor types</string>
+
+    <!-- Run play -->
+    <string name="run_load_error">Failed to load the session.</string>
+    <string name="run_progress">Task %1$d / %2$d</string>
+    <string name="run_generating">Generating task…</string>
+    <string name="run_correct">Correct!</string>
+    <string name="run_incorrect">Incorrect.</string>
+    <string name="run_submit">Submit</string>
+    <string name="run_submitting">Checking…</string>
+    <string name="run_next">Next →</string>
+    <string name="run_see_result">See result</string>
+
+    <!-- Run result -->
+    <string name="result_title">Result</string>
+    <string name="result_load_error">Failed to finish the session.</string>
+    <string name="result_computing">Calculating results…</string>
+    <string name="result_summary_correct">%1$d of %2$d correct</string>
+    <string name="result_avg_time">Average time per task: %1$ds</string>
+    <string name="result_by_skill">By skill</string>
+    <string name="result_by_distractor">By distractor type</string>
+    <string name="result_mistakes">Mistakes</string>
+    <string name="result_back_to_catalog">Back to catalog</string>
+
+    <!-- Settings preview labels -->
+    <string name="preview_level">Level</string>
+    <string name="preview_variant">Variant</string>
+    <string name="preview_register">Register</string>
+    <string name="preview_explanation_language">Explanation language</string>
+    <string name="preview_distractors">Distractors</string>
+    <string name="preview_topic">Topic</string>
+    <string name="preview_grammar_focus">Grammar</string>
+
+    <!-- Language switcher -->
+    <string name="language_switcher_cd">Change language</string>
+    <string name="locale_name_uk">Українська</string>
+    <string name="locale_name_en">English</string>
+
+    <!-- Mic permission -->
+    <string name="mic_permission_required">Microphone access required.</string>
+    <string name="mic_permission_denied_permanently">Microphone permission disabled. Open app settings to enable it.</string>
+    <string name="open_settings">Settings</string>
+
+    <!-- Level labels -->
+    <string name="label_level_a1">A1 (Beginner)</string>
+    <string name="label_level_a2">A2 (Elementary)</string>
+    <string name="label_level_b1">B1 (Intermediate)</string>
+    <string name="label_level_b2">B2 (Upper-Intermediate)</string>
+    <string name="label_level_c1">C1 (Advanced)</string>
+    <string name="label_level_c2">C2 (Proficient)</string>
+
+    <!-- English variant labels -->
+    <string name="label_english_variant_british">British</string>
+    <string name="label_english_variant_american">American</string>
+
+    <!-- Register labels -->
+    <string name="label_register_formal">Formal</string>
+    <string name="label_register_neutral">Neutral</string>
+    <string name="label_register_informal">Informal</string>
+
+    <!-- Explanation language labels -->
+    <string name="label_explanation_language_english">English</string>
+    <string name="label_explanation_language_ukrainian">Ukrainian</string>
+
+    <!-- Distractor type labels -->
+    <string name="label_distractor_easy">Easy</string>
+    <string name="label_distractor_grammatical">Grammatical</string>
+    <string name="label_distractor_semantic_close">Semantically close</string>
+    <string name="label_distractor_common_mistake">Common mistake</string>
+
+    <!-- Skill target labels -->
+    <string name="label_skill_vocabulary">Vocabulary</string>
+    <string name="label_skill_grammar">Grammar</string>
+    <string name="label_skill_collocations">Collocations</string>
+    <string name="label_skill_word_formation">Word formation</string>
+    <string name="label_skill_reading_comprehension">Reading comprehension</string>
+
+    <!-- Presentation format labels -->
+    <string name="label_presentation_isolated_sentences">Isolated sentences</string>
+    <string name="label_presentation_connected_text">Connected text</string>
+
+    <!-- Question stem style labels -->
+    <string name="label_stem_gap_fill">Gap-fill</string>
+    <string name="label_stem_direct_question">Direct question</string>
+
+    <!-- Feedback mode labels -->
+    <string name="label_feedback_immediate">After each answer</string>
+    <string name="label_feedback_end">At the end</string>
+
+    <!-- Lesson type labels -->
+    <string name="label_lesson_type_multiple_choice">Multiple choice</string>
+
+    <!-- API error messages -->
+    <string name="error_missing_token">No session. Please sign in again.</string>
+    <string name="error_invalid_token">Session invalid. Please sign in again.</string>
+    <string name="error_no_email">Could not determine your email.</string>
+    <string name="error_not_allowed">Your email is not on the allowed list.</string>
+    <string name="error_admin_required">Admin role required.</string>
+    <string name="error_invalid_input">Invalid input.</string>
+    <string name="error_invalid_email">Invalid email format.</string>
+    <string name="error_invalid_role">Invalid role.</string>
+    <string name="error_invalid_type_settings">Invalid lesson type settings.</string>
+    <string name="error_invalid_lesson_type_settings">Invalid lesson type settings.</string>
+    <string name="error_missing_required_setting">Missing required settings: %1$s</string>
+    <string name="error_task_count_out_of_range">Task count is outside the allowed range (1–100).</string>
+    <string name="error_options_count_5_requires_c1_c2">5 options are allowed only for C1 and C2 levels.</string>
+    <string name="error_prompt_required">Prompt is required.</string>
+    <string name="error_prompt_too_long">Prompt is too long.</string>
+    <string name="error_folder_not_found">Folder not found.</string>
+    <string name="error_lesson_not_found">Lesson not found.</string>
+    <string name="error_run_not_found">Session not found.</string>
+    <string name="error_task_not_found">Task not found.</string>
+    <string name="error_email_not_found">Email not found.</string>
+    <string name="error_cycle_blocked">Cannot move a folder into its own descendant.</string>
+    <string name="error_folder_not_empty">Folder is not empty.</string>
+    <string name="error_email_already_allowed">This email is already allowed.</string>
+    <string name="error_cannot_remove_self">You cannot remove your own account.</string>
+    <string name="error_run_already_finished">Session is already finished.</string>
+    <string name="error_all_tasks_generated">All tasks have already been generated.</string>
+    <string name="error_already_answered">This task has already been answered.</string>
+    <string name="error_invalid_index_gap">Invalid task index.</string>
+    <string name="error_invalid_index_param">Invalid index parameter.</string>
+    <string name="error_invalid_selected_index">Invalid selected answer.</string>
+    <string name="error_user_never_signed_in">User has not signed in yet.</string>
+    <string name="error_rate_limited">Too many requests. Try again in a minute.</string>
+    <string name="error_generation_failed">Failed to generate the task.</string>
+    <string name="error_timeout">Request timed out.</string>
+    <string name="error_upstream_failed">External service error.</string>
+    <string name="error_openai_not_configured">OpenAI is not configured.</string>
+    <string name="error_internal">Internal server error.</string>
+    <string name="error_failed">Action failed.</string>
+    <string name="error_unknown_error">An error occurred.</string>
+    <string name="error_network">Network error: %1$s</string>
+    <string name="error_parse">Failed to parse server response.</string>
+    <string name="error_http_generic">HTTP %1$d</string>
+</resources>
