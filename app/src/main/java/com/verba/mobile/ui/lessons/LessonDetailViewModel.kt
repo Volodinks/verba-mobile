@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.verba.mobile.VerbaApp
-import com.verba.mobile.data.Lesson
+import com.verba.mobile.data.api.ApiResult
+import com.verba.mobile.data.api.LessonDetailResponse
 import com.verba.mobile.ui.navigation.Routes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +18,8 @@ import kotlinx.coroutines.launch
 
 sealed interface LessonDetailUiState {
     data object Loading : LessonDetailUiState
-    data class Loaded(val lesson: Lesson) : LessonDetailUiState
-    data object NotFound : LessonDetailUiState
-    data object Error : LessonDetailUiState
+    data class Loaded(val data: LessonDetailResponse) : LessonDetailUiState
+    data class Error(val message: String) : LessonDetailUiState
 }
 
 class LessonDetailViewModel(
@@ -27,25 +27,25 @@ class LessonDetailViewModel(
     private val lessonId: String,
 ) : AndroidViewModel(application) {
 
-    private val lessonsRepository = (application as VerbaApp).lessonsRepository
+    private val lessonsApi = (application as VerbaApp).lessonsApi
 
     private val _state = MutableStateFlow<LessonDetailUiState>(LessonDetailUiState.Loading)
     val state: StateFlow<LessonDetailUiState> = _state.asStateFlow()
 
-    init {
-        load()
-    }
+    init { load() }
 
     fun load() {
         viewModelScope.launch {
             _state.value = LessonDetailUiState.Loading
-            lessonsRepository.getLessonById(lessonId).fold(
-                onSuccess = { lesson ->
-                    _state.value = if (lesson == null) LessonDetailUiState.NotFound
-                    else LessonDetailUiState.Loaded(lesson)
-                },
-                onFailure = { _state.value = LessonDetailUiState.Error },
-            )
+            _state.value = when (val r = lessonsApi.getLesson(lessonId)) {
+                is ApiResult.Success -> LessonDetailUiState.Loaded(r.value)
+                is ApiResult.Error -> LessonDetailUiState.Error(
+                    "HTTP ${r.status}${r.code?.let { " · $it" } ?: ""}"
+                )
+                is ApiResult.Network -> LessonDetailUiState.Error(
+                    "Мережева помилка: ${r.cause.message ?: r.cause::class.simpleName}"
+                )
+            }
         }
     }
 
@@ -54,9 +54,9 @@ class LessonDetailViewModel(
             initializer {
                 val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
                 val handle = createSavedStateHandle()
-                val lessonId = handle.get<String>(Routes.ARG_LESSON_ID)
+                val id = handle.get<String>(Routes.ARG_LESSON_ID)
                     ?: error("Missing lessonId nav arg")
-                LessonDetailViewModel(app, lessonId)
+                LessonDetailViewModel(app, id)
             }
         }
     }

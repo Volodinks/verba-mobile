@@ -17,31 +17,39 @@
     <string name="access_denied_signed_in_as">Ви увійшли як:</string>
     <string name="sign_out">Вийти</string>
 
-    <!-- Lesson list -->
-    <string name="lessons_title">Мої уроки</string>
-    <string name="lessons_empty">Уроків ще немає. Адмін додасть їх через веб.</string>
-    <string name="lessons_load_error">Не вдалося завантажити уроки</string>
+    <!-- Folder tree -->
+    <string name="lessons_title">Уроки</string>
+    <string name="folders_empty">Тут поки порожньо. Адмін додасть каталоги і уроки через веб.</string>
+    <string name="lessons_load_error">Не вдалося завантажити</string>
     <string name="lessons_retry">Спробувати ще</string>
 
     <!-- Lesson detail -->
     <string name="lesson_detail_title">Урок</string>
-    <string name="lesson_not_found">Урок недоступний</string>
-    <string name="back_to_list">Повернутися до списку</string>
-    <string name="speak">Озвучити</string>
-    <string name="speak_stop">Зупинити</string>
-    <string name="speak_unavailable">English TTS недоступний</string>
-    <string name="listen">Сказати</string>
-    <string name="listen_active">Слухаю…</string>
-    <string name="listen_unavailable">Розпізнавання голосу недоступне</string>
-    <string name="recognized_placeholder">Тут зʼявиться розпізнаний текст</string>
+    <string name="effective_settings_title">Налаштування рівня</string>
+    <string name="effective_settings_incomplete">Не всі обов\'язкові поля заповнені — урок не запуститься</string>
+    <string name="type_settings_title">Налаштування типу</string>
+    <string name="start_lesson">Почати урок</string>
+    <string name="lesson_missing_settings">Урок не готовий до запуску</string>
 
-    <!-- Permissions -->
-    <string name="mic_permission_required">Потрібен доступ до мікрофона</string>
-    <string name="mic_permission_denied_permanently">Дозвіл на мікрофон вимкнено. Відкрийте налаштування застосунку, щоб увімкнути.</string>
-    <string name="open_settings">Налаштування</string>
+    <!-- Run setup -->
+    <string name="run_setup_title">Налаштування сесії</string>
+    <string name="run_setup_count_label">Кількість завдань</string>
+    <string name="run_setup_feedback_label">Зворотний звʼязок</string>
+    <string name="feedback_immediate">Одразу</string>
+    <string name="feedback_end">У кінці</string>
+    <string name="starting">Стартую…</string>
 
-    <!-- STT errors -->
-    <string name="stt_error_no_match">Нічого не розпізнано, спробуйте ще</string>
-    <string name="stt_error_network">Потрібен інтернет для розпізнавання</string>
-    <string name="stt_error_generic">Помилка розпізнавання</string>
+    <!-- Run play -->
+    <string name="submit_answer">Відповісти</string>
+    <string name="next_task">Далі</string>
+    <string name="see_result">Подивитись результат</string>
+    <string name="feedback_correct">Правильно</string>
+    <string name="feedback_incorrect">Неправильно</string>
+
+    <!-- Run result -->
+    <string name="result_title">Результат</string>
+    <string name="breakdown_by_skill">За навичкою</string>
+    <string name="breakdown_by_distractor">За типом дистрактора</string>
+    <string name="mistakes_title">Помилки</string>
+    <string name="back_to_lessons">До списку уроків</string>
 </resources>

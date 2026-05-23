@@ -23,10 +23,13 @@ import androidx.navigation.navArgument
 import com.verba.mobile.ui.accessdenied.AccessDeniedScreen
 import com.verba.mobile.ui.app.AppState
 import com.verba.mobile.ui.app.AppViewModel
+import com.verba.mobile.ui.folders.FolderTreeScreen
 import com.verba.mobile.ui.lessons.LessonDetailScreen
-import com.verba.mobile.ui.lessons.LessonListScreen
 import com.verba.mobile.ui.login.LoginScreen
 import com.verba.mobile.ui.navigation.Routes
+import com.verba.mobile.ui.runs.RunPlayScreen
+import com.verba.mobile.ui.runs.RunResultScreen
+import com.verba.mobile.ui.runs.RunSetupScreen
 import com.verba.mobile.ui.theme.VerbaTheme
 
 class MainActivity : ComponentActivity() {
@@ -76,10 +79,10 @@ private fun AuthorizedGraph(onSignOut: () -> Unit) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Routes.LESSON_LIST,
+        startDestination = Routes.FOLDER_TREE,
     ) {
-        composable(Routes.LESSON_LIST) {
-            LessonListScreen(
+        composable(Routes.FOLDER_TREE) {
+            FolderTreeScreen(
                 onOpenLesson = { id -> navController.navigate(Routes.lessonDetail(id)) },
                 onSignOut = onSignOut,
             )
@@ -90,6 +93,46 @@ private fun AuthorizedGraph(onSignOut: () -> Unit) {
         ) {
             LessonDetailScreen(
                 onBack = { navController.popBackStack() },
+                onStartRun = { id -> navController.navigate(Routes.runSetup(id)) },
+            )
+        }
+        composable(
+            route = Routes.RUN_SETUP,
+            arguments = listOf(navArgument(Routes.ARG_LESSON_ID) { type = NavType.StringType }),
+        ) {
+            RunSetupScreen(
+                onBack = { navController.popBackStack() },
+                onRunCreated = { runId ->
+                    navController.navigate(Routes.runPlay(runId)) {
+                        popUpTo(Routes.FOLDER_TREE) { inclusive = false }
+                    }
+                },
+            )
+        }
+        composable(
+            route = Routes.RUN_PLAY,
+            arguments = listOf(navArgument(Routes.ARG_RUN_ID) { type = NavType.StringType }),
+        ) { entry ->
+            val runId = entry.arguments?.getString(Routes.ARG_RUN_ID).orEmpty()
+            RunPlayScreen(
+                runId = runId,
+                onFinished = { id ->
+                    navController.navigate(Routes.runResult(id)) {
+                        popUpTo(Routes.FOLDER_TREE) { inclusive = false }
+                    }
+                },
+            )
+        }
+        composable(
+            route = Routes.RUN_RESULT,
+            arguments = listOf(navArgument(Routes.ARG_RUN_ID) { type = NavType.StringType }),
+        ) {
+            RunResultScreen(
+                onDone = {
+                    navController.navigate(Routes.FOLDER_TREE) {
+                        popUpTo(Routes.FOLDER_TREE) { inclusive = true }
+                    }
+                },
             )
         }
     }

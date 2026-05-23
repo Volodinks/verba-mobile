@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
 }
 
@@ -17,6 +18,12 @@ android {
         versionName = "0.1.0"
 
         vectorDrawables { useSupportLibrary = true }
+
+        buildConfigField(
+            "String",
+            "API_BASE_URL",
+            "\"${project.findProperty("verba.apiBaseUrl") ?: "https://verba-web-psi.vercel.app"}\"",
+        )
     }
 
     buildTypes {
@@ -44,6 +51,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -80,4 +88,10 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 }
