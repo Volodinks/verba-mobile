@@ -59,6 +59,12 @@ private fun errorResIdFor(code: String?): Int? = when (code) {
     "run_already_finished" -> R.string.error_run_already_finished
     "all_tasks_generated" -> R.string.error_all_tasks_generated
     "already_answered" -> R.string.error_already_answered
+    "already_judged" -> R.string.error_already_judged
+    "task_not_answered" -> R.string.error_task_not_answered
+    "task_already_correct" -> R.string.error_task_already_correct
+    "judge_unsupported_for_type" -> R.string.error_judge_unsupported_for_type
+    "invalid_answer" -> R.string.error_invalid_answer
+    "folder_id_required" -> R.string.error_folder_id_required
     "invalid_index_gap" -> R.string.error_invalid_index_gap
     "invalid_index_param" -> R.string.error_invalid_index_param
     "invalid_selected_index" -> R.string.error_invalid_selected_index

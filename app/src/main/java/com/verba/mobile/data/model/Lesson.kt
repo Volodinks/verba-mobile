@@ -7,6 +7,8 @@ import kotlinx.serialization.json.JsonObject
 @Serializable
 enum class LessonTypeId {
     @SerialName("multiple_choice") MULTIPLE_CHOICE,
+    @SerialName("inline_dropdowns") INLINE_DROPDOWNS,
+    @SerialName("text_input") TEXT_INPUT,
 }
 
 @Serializable
@@ -16,8 +18,9 @@ data class Lesson(
     val type: LessonTypeId,
     val title: String,
     val description: String? = null,
-    val universal_override: UniversalSettings? = null,
-    /** Opaque per-type settings; parsed by the matching engine on the mobile side. */
+    /** Server-resolved full universal settings for this lesson. Required fields are filled when present. */
+    val universal_settings: UniversalSettings? = null,
+    /** Opaque per-type settings; shape depends on [type]. */
     val type_settings: JsonObject,
     val createdBy: String? = null,
     val createdAt: String? = null,

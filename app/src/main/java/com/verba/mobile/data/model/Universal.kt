@@ -41,6 +41,42 @@ enum class DistractorType {
 }
 
 @Serializable
+enum class EnglishTense {
+    @SerialName("present_simple") PRESENT_SIMPLE,
+    @SerialName("present_continuous") PRESENT_CONTINUOUS,
+    @SerialName("present_perfect") PRESENT_PERFECT,
+    @SerialName("present_perfect_continuous") PRESENT_PERFECT_CONTINUOUS,
+    @SerialName("past_simple") PAST_SIMPLE,
+    @SerialName("past_continuous") PAST_CONTINUOUS,
+    @SerialName("past_perfect") PAST_PERFECT,
+    @SerialName("past_perfect_continuous") PAST_PERFECT_CONTINUOUS,
+    @SerialName("future_simple") FUTURE_SIMPLE,
+    @SerialName("future_continuous") FUTURE_CONTINUOUS,
+    @SerialName("future_perfect") FUTURE_PERFECT,
+    @SerialName("future_perfect_continuous") FUTURE_PERFECT_CONTINUOUS,
+}
+
+@Serializable
+enum class Conditional {
+    @SerialName("zero") ZERO,
+    @SerialName("first") FIRST,
+    @SerialName("second") SECOND,
+    @SerialName("third") THIRD,
+    @SerialName("mixed") MIXED,
+    @SerialName("none") NONE,
+}
+
+@Serializable
+enum class SentenceType {
+    @SerialName("affirmative") AFFIRMATIVE,
+    @SerialName("negative") NEGATIVE,
+    @SerialName("yes_no_question") YES_NO_QUESTION,
+    @SerialName("wh_question") WH_QUESTION,
+    @SerialName("imperative") IMPERATIVE,
+    @SerialName("exclamative") EXCLAMATIVE,
+}
+
+@Serializable
 data class UniversalSettings(
     val level: Level? = null,
     val topic: String? = null,
@@ -52,6 +88,9 @@ data class UniversalSettings(
     val explanation_language: ExplanationLanguage? = null,
     val interests: List<String>? = null,
     val distractor_types: List<DistractorType>? = null,
+    val english_tenses: List<EnglishTense>? = null,
+    val conditionals: List<Conditional>? = null,
+    val sentence_types: List<SentenceType>? = null,
 )
 
 @Serializable
@@ -66,6 +105,9 @@ data class EffectiveSettings(
     val grammar_focus: String? = null,
     val explanation_enabled: Boolean? = null,
     val interests: List<String>? = null,
+    val english_tenses: List<EnglishTense>? = null,
+    val conditionals: List<Conditional>? = null,
+    val sentence_types: List<SentenceType>? = null,
 )
 
 val REQUIRED_SETTINGS_KEYS = listOf(

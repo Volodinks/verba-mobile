@@ -1,56 +1,34 @@
 package com.verba.mobile.data
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.verba.mobile.data.model.LessonTypeId
-import kotlinx.coroutines.tasks.await
+import com.verba.mobile.data.api.ApiResult
+import com.verba.mobile.data.api.CatalogApi
+import com.verba.mobile.data.model.Folder
+import com.verba.mobile.data.model.Lesson
 
 /**
- * Read-only access to the `folders` and `lessons` collections — used to build the navigation tree.
- * For full lesson detail (with effective_settings + ancestor_chain) the client hits GET /api/lessons/{id}.
+ * Thin facade over [CatalogApi] for catalog browsing. Returns the full [Folder] / [Lesson]
+ * models from the server so callers can use [Folder.path] for breadcrumbs and the server's
+ * recursive [Folder.lesson_count].
+ *
+ * No direct Firestore reads — the catalog goes through the verba-web HTTP API so the same
+ * access-control and visibility logic applies as on the web.
  */
-class FoldersRepository(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
-) {
-    data class FolderNode(
-        val id: String,
-        val parent_id: String?,
-        val name: String,
-        val position: Double,
-    )
+class FoldersRepository(private val catalogApi: CatalogApi) {
 
-    data class LessonStub(
-        val id: String,
-        val folder_id: String,
-        val title: String,
-        val description: String?,
-        val type: LessonTypeId?,
-    )
-
-    suspend fun listFolders(): Result<List<FolderNode>> = runCatching {
-        val snap = firestore.collection("folders").get().await()
-        snap.documents.map { doc ->
-            FolderNode(
-                id = doc.id,
-                parent_id = doc.getString("parent_id"),
-                name = doc.getString("name") ?: "(unnamed)",
-                position = (doc.get("position") as? Number)?.toDouble() ?: 0.0,
-            )
-        }.sortedWith(compareBy({ it.parent_id ?: "" }, { it.position }, { it.name }))
+    suspend fun listFolders(): Result<List<Folder>> = when (val r = catalogApi.listFolders()) {
+        is ApiResult.Success -> Result.success(r.value.folders)
+        is ApiResult.Error -> Result.failure(
+            IllegalStateException("folders: ${r.status} ${r.code ?: "no_code"}"),
+        )
+        is ApiResult.Network -> Result.failure(r.cause)
     }
 
-    suspend fun listLessons(): Result<List<LessonStub>> = runCatching {
-        val snap = firestore.collection("lessons").get().await()
-        snap.documents.map { doc ->
-            LessonStub(
-                id = doc.id,
-                folder_id = doc.getString("folder_id") ?: "",
-                title = doc.getString("title") ?: "(untitled)",
-                description = doc.getString("description"),
-                type = when (doc.getString("type")) {
-                    "multiple_choice" -> LessonTypeId.MULTIPLE_CHOICE
-                    else -> null
-                },
+    suspend fun listLessons(folderId: String): Result<List<Lesson>> =
+        when (val r = catalogApi.listLessons(folderId)) {
+            is ApiResult.Success -> Result.success(r.value.lessons)
+            is ApiResult.Error -> Result.failure(
+                IllegalStateException("lessons: ${r.status} ${r.code ?: "no_code"}"),
             )
-        }.sortedBy { it.title.lowercase() }
-    }
+            is ApiResult.Network -> Result.failure(r.cause)
+        }
 }

@@ -37,6 +37,14 @@ data class MultipleChoiceTaskMeta(
     val skill_target: SkillTarget,
     val distractor_type: DistractorType,
     val level: Level,
+    val tense: EnglishTense? = null,
+    val conditional: Conditional? = null,
+    val sentence_type: SentenceType? = null,
+    val validated_sentence: String? = null,
+    val translation_uk: String? = null,
+    val pipeline_attempts: Int? = null,
+    val question_form: QuestionStemStyle? = null,
+    val assembled_sentence: String? = null,
 )
 
 @Serializable
@@ -45,12 +53,12 @@ data class MultipleChoiceUserAnswer(
 )
 
 /**
- * Task as returned by GET /api/runs/:id/next-task (correct_index and explanation hidden until answer
- * or completion). Same shape supports the post-answer enriched task too — extra fields just become null.
+ * Task as returned by POST /api/runs/:id/next-task. Reveal fields (correct_index, explanation, certain
+ * meta keys) are stripped server-side when the visibility policy hides them — both are nullable.
  */
 @Serializable
 data class MultipleChoiceTask(
-    val index: Int,
+    override val index: Int,
     val stem: String,
     val options: List<String>,
     val correct_index: Int? = null,
@@ -58,6 +66,9 @@ data class MultipleChoiceTask(
     val meta: MultipleChoiceTaskMeta,
     val user_answer: MultipleChoiceUserAnswer? = null,
     val is_correct: Boolean? = null,
-    val generatedAt: String,
-    val answeredAt: String? = null,
-)
+    override val generatedAt: String,
+    override val answeredAt: String? = null,
+) : Task {
+    override val isCorrect: Boolean? get() = is_correct
+    override val hasUserAnswer: Boolean get() = user_answer != null
+}

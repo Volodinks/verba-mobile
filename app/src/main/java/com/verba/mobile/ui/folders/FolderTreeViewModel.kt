@@ -4,8 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.verba.mobile.VerbaApp
-import com.verba.mobile.data.FoldersRepository
-import kotlinx.coroutines.async
+import com.verba.mobile.data.model.Folder
+import com.verba.mobile.data.model.Lesson
+import com.verba.mobile.data.model.LessonTypeId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,7 @@ data class LessonEntry(
     val id: String,
     val title: String,
     val description: String?,
-    val supported: Boolean,
+    val type: LessonTypeId,
 )
 
 sealed interface FolderTreeUiState {
@@ -32,6 +33,8 @@ sealed interface FolderTreeUiState {
         val breadcrumb: List<Pair<String?, String>>, // (folderId|null=root, name)
         val subfolders: List<FolderEntry>,
         val lessons: List<LessonEntry>,
+        val lessonsLoading: Boolean,
+        val lessonsError: String? = null,
     ) : FolderTreeUiState
     data class Error(val message: String) : FolderTreeUiState
 }
@@ -43,8 +46,8 @@ class FolderTreeViewModel(application: Application) : AndroidViewModel(applicati
     private val _state = MutableStateFlow<FolderTreeUiState>(FolderTreeUiState.Loading)
     val state: StateFlow<FolderTreeUiState> = _state.asStateFlow()
 
-    private var folders: List<FoldersRepository.FolderNode> = emptyList()
-    private var lessons: List<FoldersRepository.LessonStub> = emptyList()
+    private var folders: List<Folder> = emptyList()
+    private val lessonsByFolder: MutableMap<String, List<Lesson>> = mutableMapOf()
     private val stack: MutableList<String?> = mutableListOf(null) // root
 
     init {
@@ -54,29 +57,25 @@ class FolderTreeViewModel(application: Application) : AndroidViewModel(applicati
     fun reload() {
         viewModelScope.launch {
             _state.value = FolderTreeUiState.Loading
-            val foldersDef = async { foldersRepo.listFolders() }
-            val lessonsDef = async { foldersRepo.listLessons() }
-            val foldersR = foldersDef.await()
-            val lessonsR = lessonsDef.await()
-            val foldersErr = foldersR.exceptionOrNull()
-            val lessonsErr = lessonsR.exceptionOrNull()
-            if (foldersErr != null || lessonsErr != null) {
-                val err = foldersErr ?: lessonsErr!!
-                val source = if (foldersErr != null) "folders" else "lessons"
+            val foldersR = foldersRepo.listFolders()
+            val err = foldersR.exceptionOrNull()
+            if (err != null) {
                 _state.value = FolderTreeUiState.Error(
-                    "$source: ${err::class.simpleName} · ${err.message ?: "no message"}"
+                    "folders: ${err::class.simpleName} · ${err.message ?: "no message"}",
                 )
                 return@launch
             }
             folders = foldersR.getOrThrow()
-            lessons = lessonsR.getOrThrow()
+            lessonsByFolder.clear()
             recompute()
+            loadLessonsForCurrentFolder()
         }
     }
 
     fun openFolder(id: String) {
         stack.add(id)
         recompute()
+        viewModelScope.launch { loadLessonsForCurrentFolder() }
     }
 
     /** Pop one level. Returns true if we popped; false if already at root. */
@@ -84,25 +83,55 @@ class FolderTreeViewModel(application: Application) : AndroidViewModel(applicati
         if (stack.size <= 1) return false
         stack.removeAt(stack.lastIndex)
         recompute()
+        viewModelScope.launch { loadLessonsForCurrentFolder() }
         return true
+    }
+
+    private suspend fun loadLessonsForCurrentFolder() {
+        val current = stack.last() ?: run {
+            // Root has no API-supplied lessons (lessons must live inside a folder).
+            recompute()
+            return
+        }
+        if (lessonsByFolder.containsKey(current)) return // already cached
+        // Show "loading lessons" marker without dropping the rest of the loaded state.
+        (_state.value as? FolderTreeUiState.Loaded)?.let { loaded ->
+            _state.value = loaded.copy(lessonsLoading = true, lessonsError = null)
+        }
+        val r = foldersRepo.listLessons(current)
+        val err = r.exceptionOrNull()
+        if (err != null) {
+            (_state.value as? FolderTreeUiState.Loaded)?.let { loaded ->
+                _state.value = loaded.copy(
+                    lessonsLoading = false,
+                    lessonsError = err.message ?: err::class.simpleName,
+                )
+            }
+            return
+        }
+        lessonsByFolder[current] = r.getOrThrow()
+        recompute()
     }
 
     private fun recompute() {
         val current = stack.last()
-        val subfolders = folders.filter { it.parent_id == current }.map { f ->
-            FolderEntry(
-                id = f.id,
-                name = f.name,
-                childrenCount = folders.count { it.parent_id == f.id },
-                lessonsCount = countLessonsRecursive(f.id),
-            )
-        }
-        val visibleLessons = lessons.filter { it.folder_id == current }.map { l ->
+        val subfolders = folders
+            .filter { it.parent_id == current }
+            .sortedWith(compareBy({ it.position }, { it.name }))
+            .map { f ->
+                FolderEntry(
+                    id = f.id,
+                    name = f.name,
+                    childrenCount = folders.count { it.parent_id == f.id },
+                    lessonsCount = f.lesson_count ?: 0,
+                )
+            }
+        val lessons = (current?.let { lessonsByFolder[it] } ?: emptyList()).map { l ->
             LessonEntry(
                 id = l.id,
                 title = l.title,
                 description = l.description,
-                supported = l.type == com.verba.mobile.data.model.LessonTypeId.MULTIPLE_CHOICE,
+                type = l.type,
             )
         }
         val breadcrumb = buildBreadcrumb()
@@ -110,19 +139,13 @@ class FolderTreeViewModel(application: Application) : AndroidViewModel(applicati
             currentFolderId = current,
             breadcrumb = breadcrumb,
             subfolders = subfolders,
-            lessons = visibleLessons,
+            lessons = lessons,
+            lessonsLoading = current != null && !lessonsByFolder.containsKey(current),
         )
     }
 
     private fun buildBreadcrumb(): List<Pair<String?, String>> = stack.map { id ->
         if (id == null) null to "Уроки"
         else id to (folders.firstOrNull { it.id == id }?.name ?: "?")
-    }
-
-    private fun countLessonsRecursive(folderId: String): Int {
-        var total = lessons.count { it.folder_id == folderId }
-        val children = folders.filter { it.parent_id == folderId }
-        for (c in children) total += countLessonsRecursive(c.id)
-        return total
     }
 }

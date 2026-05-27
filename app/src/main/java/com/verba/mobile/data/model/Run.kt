@@ -2,6 +2,7 @@ package com.verba.mobile.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
@@ -48,8 +49,10 @@ data class Statistics(
 )
 
 /**
- * Server-side LessonRun document. `tasks` is opaque JSON because shape depends on `lesson_type`
- * (currently always MultipleChoiceTask). Parse to MultipleChoiceTask in the client when type matches.
+ * Server-side LessonRun document. [tasks] stays as raw JSON because shape depends on [lesson_type];
+ * use [parsedTasks] to get the typed [Task] hierarchy.
+ *
+ * [task_count] is nullable — null means "open-ended: the learner ends the run manually".
  */
 @Serializable
 data class LessonRun(
@@ -60,10 +63,13 @@ data class LessonRun(
     val effective_settings: EffectiveSettings,
     val type_settings: JsonObject,
     val feedback_mode: FeedbackMode,
-    val task_count: Int,
+    val task_count: Int? = null,
     val status: LessonRunStatus,
     val tasks: List<JsonObject> = emptyList(),
     val statistics: Statistics? = null,
     val startedAt: String,
     val completedAt: String? = null,
-)
+) {
+    fun parsedTasks(json: Json): List<Task> =
+        tasks.map { Task.parse(lesson_type, json, it) }
+}

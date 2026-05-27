@@ -19,9 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material.icons.outlined.ArrowDropDownCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -50,7 +52,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.verba.mobile.R
 import com.verba.mobile.VerbaApp
+import com.verba.mobile.data.model.LessonTypeId
 import com.verba.mobile.locale.LocaleController
+import com.verba.mobile.ui.labels.label
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,8 +190,25 @@ private fun Loaded(
                 items(state.subfolders, key = { "f_${it.id}" }) { f ->
                     FolderRow(folder = f, onClick = { onOpenFolder(f.id) })
                 }
+                if (state.lessonsLoading) {
+                    item("lessons_loading") {
+                        Box(Modifier.fillMaxWidth().padding(16.dp), Alignment.Center) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                state.lessonsError?.let { msg ->
+                    item("lessons_error") {
+                        Text(
+                            msg,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        )
+                    }
+                }
                 items(state.lessons, key = { "l_${it.id}" }) { l ->
-                    LessonRow(lesson = l, onClick = { if (l.supported) onOpenLesson(l.id) })
+                    LessonRow(lesson = l, onClick = { onOpenLesson(l.id) })
                 }
             }
         }
@@ -245,16 +266,16 @@ private fun summary(folder: FolderEntry): String {
 
 @Composable
 private fun LessonRow(lesson: LessonEntry, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().clickable(enabled = lesson.supported, onClick = onClick)) {
+    Card(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Filled.PlayArrow, contentDescription = null)
+            Icon(lessonIcon(lesson.type), contentDescription = null)
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(lesson.title, style = MaterialTheme.typography.bodyLarge)
-                val sub = lesson.description ?: stringResource(R.string.label_lesson_type_multiple_choice)
+                val sub = lesson.description ?: label(lesson.type)
                 Text(
                     sub,
                     style = MaterialTheme.typography.bodyMedium,
@@ -263,6 +284,13 @@ private fun LessonRow(lesson: LessonEntry, onClick: () -> Unit) {
             }
         }
     }
+}
+
+@Composable
+private fun lessonIcon(type: LessonTypeId) = when (type) {
+    LessonTypeId.MULTIPLE_CHOICE -> Icons.Filled.PlayArrow
+    LessonTypeId.INLINE_DROPDOWNS -> Icons.Outlined.ArrowDropDownCircle
+    LessonTypeId.TEXT_INPUT -> Icons.Filled.Edit
 }
 
 @Composable

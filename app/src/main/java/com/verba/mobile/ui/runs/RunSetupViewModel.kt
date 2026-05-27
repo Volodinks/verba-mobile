@@ -10,12 +10,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.verba.mobile.VerbaApp
 import com.verba.mobile.data.api.ApiResult
 import com.verba.mobile.data.api.CreateRunRequest
+import com.verba.mobile.data.model.Conditional
 import com.verba.mobile.data.model.DistractorType
+import com.verba.mobile.data.model.EnglishTense
 import com.verba.mobile.data.model.EnglishVariant
 import com.verba.mobile.data.model.ExplanationLanguage
 import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.Level
 import com.verba.mobile.data.model.Register
+import com.verba.mobile.data.model.SentenceType
 import com.verba.mobile.data.model.UniversalSettings
 import com.verba.mobile.ui.errors.UiError
 import com.verba.mobile.ui.errors.toUiError
@@ -29,6 +32,7 @@ import kotlinx.coroutines.launch
 data class RunSetupUiState(
     val loadingLesson: Boolean = true,
     val loadError: UiError? = null,
+    val openEnded: Boolean = false,
     val taskCount: Int = 5,
     val feedbackMode: FeedbackMode = FeedbackMode.IMMEDIATE,
     val level: Level? = null,
@@ -36,6 +40,10 @@ data class RunSetupUiState(
     val register: Register? = null,
     val explanationLanguage: ExplanationLanguage? = null,
     val distractorTypes: Set<DistractorType> = emptySet(),
+    val englishTenses: Set<EnglishTense> = emptySet(),
+    val conditionals: Set<Conditional> = emptySet(),
+    val sentenceTypes: Set<SentenceType> = emptySet(),
+    val explanationEnabled: Boolean? = null,
     val creating: Boolean = false,
     val createError: UiError? = null,
     val createdRunId: String? = null,
@@ -73,6 +81,10 @@ class RunSetupViewModel(
                             register = es?.register ?: Register.NEUTRAL,
                             explanationLanguage = es?.explanation_language,
                             distractorTypes = es?.distractor_types?.toSet() ?: emptySet(),
+                            englishTenses = es?.english_tenses?.toSet() ?: emptySet(),
+                            conditionals = es?.conditionals?.toSet() ?: emptySet(),
+                            sentenceTypes = es?.sentence_types?.toSet() ?: emptySet(),
+                            explanationEnabled = es?.explanation_enabled,
                         )
                     }
                 }
@@ -82,17 +94,40 @@ class RunSetupViewModel(
         }
     }
 
+    fun setOpenEnded(value: Boolean) { _state.update { it.copy(openEnded = value) } }
     fun setTaskCount(value: Int) { _state.update { it.copy(taskCount = value.coerceIn(1, 100)) } }
     fun setFeedbackMode(mode: FeedbackMode) { _state.update { it.copy(feedbackMode = mode) } }
     fun setLevel(v: Level) { _state.update { it.copy(level = v) } }
     fun setEnglishVariant(v: EnglishVariant) { _state.update { it.copy(englishVariant = v) } }
     fun setRegister(v: Register) { _state.update { it.copy(register = v) } }
     fun setExplanationLanguage(v: ExplanationLanguage) { _state.update { it.copy(explanationLanguage = v) } }
+    fun setExplanationEnabled(v: Boolean?) { _state.update { it.copy(explanationEnabled = v) } }
 
     fun toggleDistractor(t: DistractorType) {
         _state.update {
             val next = if (t in it.distractorTypes) it.distractorTypes - t else it.distractorTypes + t
             it.copy(distractorTypes = next)
+        }
+    }
+
+    fun toggleTense(t: EnglishTense) {
+        _state.update {
+            val next = if (t in it.englishTenses) it.englishTenses - t else it.englishTenses + t
+            it.copy(englishTenses = next)
+        }
+    }
+
+    fun toggleConditional(t: Conditional) {
+        _state.update {
+            val next = if (t in it.conditionals) it.conditionals - t else it.conditionals + t
+            it.copy(conditionals = next)
+        }
+    }
+
+    fun toggleSentenceType(t: SentenceType) {
+        _state.update {
+            val next = if (t in it.sentenceTypes) it.sentenceTypes - t else it.sentenceTypes + t
+            it.copy(sentenceTypes = next)
         }
     }
 
@@ -107,12 +142,16 @@ class RunSetupViewModel(
                 register = s.register,
                 explanation_language = s.explanationLanguage,
                 distractor_types = s.distractorTypes.toList(),
+                english_tenses = s.englishTenses.takeIf { it.isNotEmpty() }?.toList(),
+                conditionals = s.conditionals.takeIf { it.isNotEmpty() }?.toList(),
+                sentence_types = s.sentenceTypes.takeIf { it.isNotEmpty() }?.toList(),
+                explanation_enabled = s.explanationEnabled,
             )
             val req = CreateRunRequest(
                 lesson_id = lessonId,
                 player_override = override,
                 feedback_mode = s.feedbackMode,
-                task_count = s.taskCount,
+                task_count = if (s.openEnded) null else s.taskCount,
             )
             when (val r = runsApi.create(req)) {
                 is ApiResult.Success ->

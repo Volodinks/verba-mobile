@@ -55,6 +55,13 @@
     <string name="start_section_register">Register</string>
     <string name="start_section_explanation_language">Explanation language</string>
     <string name="start_section_distractor_types">Distractor types</string>
+    <string name="start_section_advanced">Advanced constraints (optional)</string>
+    <string name="start_section_english_tenses">Tenses</string>
+    <string name="start_section_conditionals">Conditionals</string>
+    <string name="start_section_sentence_types">Sentence types</string>
+    <string name="start_section_explanation_enabled">Show explanations</string>
+    <string name="start_open_ended">Open-ended (no fixed count)</string>
+    <string name="start_open_ended_description">Finish the run whenever you want.</string>
 
     <!-- Run play -->
     <string name="run_load_error">Failed to load the session.</string>
@@ -66,6 +73,18 @@
     <string name="run_submitting">Checking…</string>
     <string name="run_next">Next →</string>
     <string name="run_see_result">See result</string>
+    <string name="run_finish_now">Finish now</string>
+    <string name="run_count_unbounded">Tasks answered: %1$d</string>
+    <string name="run_still_generating">Still generating…</string>
+    <string name="run_answer_submitted">Answer submitted — see result at the end.</string>
+    <string name="run_inline_choose_for_gap">Pick an option for the gap</string>
+    <string name="run_inline_submit_disabled_until_all">Fill every gap to submit.</string>
+    <string name="run_text_placeholder_hint">base form: %1$s</string>
+    <string name="run_text_submit_disabled_until_all">Fill every field to submit.</string>
+    <string name="run_text_appeal">Appeal answer</string>
+    <string name="run_text_appeal_pending">Reviewing…</string>
+    <string name="run_text_appeal_accepted">Accepted on appeal</string>
+    <string name="run_text_appeal_rejected">Appeal rejected</string>
 
     <!-- Run result -->
     <string name="result_title">Result</string>
@@ -145,6 +164,38 @@
 
     <!-- Lesson type labels -->
     <string name="label_lesson_type_multiple_choice">Multiple choice</string>
+    <string name="label_lesson_type_inline_dropdowns">Inline dropdowns</string>
+    <string name="label_lesson_type_text_input">Text input</string>
+
+    <!-- Tense labels -->
+    <string name="label_tense_present_simple">Present Simple</string>
+    <string name="label_tense_present_continuous">Present Continuous</string>
+    <string name="label_tense_present_perfect">Present Perfect</string>
+    <string name="label_tense_present_perfect_continuous">Present Perfect Continuous</string>
+    <string name="label_tense_past_simple">Past Simple</string>
+    <string name="label_tense_past_continuous">Past Continuous</string>
+    <string name="label_tense_past_perfect">Past Perfect</string>
+    <string name="label_tense_past_perfect_continuous">Past Perfect Continuous</string>
+    <string name="label_tense_future_simple">Future Simple</string>
+    <string name="label_tense_future_continuous">Future Continuous</string>
+    <string name="label_tense_future_perfect">Future Perfect</string>
+    <string name="label_tense_future_perfect_continuous">Future Perfect Continuous</string>
+
+    <!-- Conditional labels -->
+    <string name="label_conditional_zero">Zero conditional</string>
+    <string name="label_conditional_first">First conditional</string>
+    <string name="label_conditional_second">Second conditional</string>
+    <string name="label_conditional_third">Third conditional</string>
+    <string name="label_conditional_mixed">Mixed conditional</string>
+    <string name="label_conditional_none">No conditional</string>
+
+    <!-- Sentence type labels -->
+    <string name="label_sentence_type_affirmative">Affirmative</string>
+    <string name="label_sentence_type_negative">Negative</string>
+    <string name="label_sentence_type_yes_no_question">Yes/no question</string>
+    <string name="label_sentence_type_wh_question">Wh-question</string>
+    <string name="label_sentence_type_imperative">Imperative</string>
+    <string name="label_sentence_type_exclamative">Exclamative</string>
 
     <!-- API error messages -->
     <string name="error_missing_token">No session. Please sign in again.</string>
@@ -174,6 +225,12 @@
     <string name="error_run_already_finished">Session is already finished.</string>
     <string name="error_all_tasks_generated">All tasks have already been generated.</string>
     <string name="error_already_answered">This task has already been answered.</string>
+    <string name="error_already_judged">This answer has already been judged.</string>
+    <string name="error_task_not_answered">Answer the task first.</string>
+    <string name="error_task_already_correct">This task is already counted as correct.</string>
+    <string name="error_judge_unsupported_for_type">Appeal is only available for text-input tasks.</string>
+    <string name="error_invalid_answer">Invalid answer format.</string>
+    <string name="error_folder_id_required">Folder id is required.</string>
     <string name="error_invalid_index_gap">Invalid task index.</string>
     <string name="error_invalid_index_param">Invalid index parameter.</string>
     <string name="error_invalid_selected_index">Invalid selected answer.</string>

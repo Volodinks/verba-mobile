@@ -55,6 +55,13 @@
     <string name="start_section_register">Регістр</string>
     <string name="start_section_explanation_language">Мова пояснень</string>
     <string name="start_section_distractor_types">Типи дистракторів</string>
+    <string name="start_section_advanced">Додаткові обмеження (необовʼязково)</string>
+    <string name="start_section_english_tenses">Часи</string>
+    <string name="start_section_conditionals">Умовні речення</string>
+    <string name="start_section_sentence_types">Типи речень</string>
+    <string name="start_section_explanation_enabled">Показувати пояснення</string>
+    <string name="start_open_ended">Без обмеження по кількості</string>
+    <string name="start_open_ended_description">Завершите урок, коли захочете.</string>
 
     <!-- Run play -->
     <string name="run_load_error">Не вдалося завантажити сесію.</string>
@@ -66,6 +73,18 @@
     <string name="run_submitting">Перевіряю…</string>
     <string name="run_next">Далі →</string>
     <string name="run_see_result">Подивитись результат</string>
+    <string name="run_finish_now">Завершити зараз</string>
+    <string name="run_count_unbounded">Завдань пройдено: %1$d</string>
+    <string name="run_still_generating">Усе ще генерую…</string>
+    <string name="run_answer_submitted">Відповідь надіслано — результат у кінці.</string>
+    <string name="run_inline_choose_for_gap">Оберіть варіант для пропуску</string>
+    <string name="run_inline_submit_disabled_until_all">Заповніть усі пропуски, щоб відповісти.</string>
+    <string name="run_text_placeholder_hint">базова форма: %1$s</string>
+    <string name="run_text_submit_disabled_until_all">Заповніть усі поля, щоб відповісти.</string>
+    <string name="run_text_appeal">Оскаржити відповідь</string>
+    <string name="run_text_appeal_pending">Перевіряю…</string>
+    <string name="run_text_appeal_accepted">Прийнято на оскарженні</string>
+    <string name="run_text_appeal_rejected">Оскарження відхилено</string>
 
     <!-- Run result -->
     <string name="result_title">Результат</string>
@@ -145,6 +164,38 @@
 
     <!-- Lesson type labels -->
     <string name="label_lesson_type_multiple_choice">Вибір варіанту</string>
+    <string name="label_lesson_type_inline_dropdowns">Випадаючі списки</string>
+    <string name="label_lesson_type_text_input">Текстовий ввід</string>
+
+    <!-- Tense labels -->
+    <string name="label_tense_present_simple">Present Simple</string>
+    <string name="label_tense_present_continuous">Present Continuous</string>
+    <string name="label_tense_present_perfect">Present Perfect</string>
+    <string name="label_tense_present_perfect_continuous">Present Perfect Continuous</string>
+    <string name="label_tense_past_simple">Past Simple</string>
+    <string name="label_tense_past_continuous">Past Continuous</string>
+    <string name="label_tense_past_perfect">Past Perfect</string>
+    <string name="label_tense_past_perfect_continuous">Past Perfect Continuous</string>
+    <string name="label_tense_future_simple">Future Simple</string>
+    <string name="label_tense_future_continuous">Future Continuous</string>
+    <string name="label_tense_future_perfect">Future Perfect</string>
+    <string name="label_tense_future_perfect_continuous">Future Perfect Continuous</string>
+
+    <!-- Conditional labels -->
+    <string name="label_conditional_zero">Zero (нульовий)</string>
+    <string name="label_conditional_first">First (перший)</string>
+    <string name="label_conditional_second">Second (другий)</string>
+    <string name="label_conditional_third">Third (третій)</string>
+    <string name="label_conditional_mixed">Mixed (змішаний)</string>
+    <string name="label_conditional_none">Без умовного</string>
+
+    <!-- Sentence type labels -->
+    <string name="label_sentence_type_affirmative">Стверджувальне</string>
+    <string name="label_sentence_type_negative">Заперечне</string>
+    <string name="label_sentence_type_yes_no_question">Питання yes/no</string>
+    <string name="label_sentence_type_wh_question">Питання з wh-словом</string>
+    <string name="label_sentence_type_imperative">Наказове</string>
+    <string name="label_sentence_type_exclamative">Окличне</string>
 
     <!-- API error messages -->
     <string name="error_missing_token">Сесію не визначено. Увійдіть знову.</string>
@@ -174,6 +225,12 @@
     <string name="error_run_already_finished">Сесію вже завершено.</string>
     <string name="error_all_tasks_generated">Усі завдання вже згенеровано.</string>
     <string name="error_already_answered">На це завдання вже відповіли.</string>
+    <string name="error_already_judged">Відповідь уже оцінено арбітром.</string>
+    <string name="error_task_not_answered">Спершу дайте відповідь на завдання.</string>
+    <string name="error_task_already_correct">Завдання вже зараховано як правильне.</string>
+    <string name="error_judge_unsupported_for_type">Оскарження доступне лише для текстового вводу.</string>
+    <string name="error_invalid_answer">Невірний формат відповіді.</string>
+    <string name="error_folder_id_required">Не вказано ідентифікатор каталогу.</string>
     <string name="error_invalid_index_gap">Невірний індекс завдання.</string>
     <string name="error_invalid_index_param">Невірний параметр індекса.</string>
     <string name="error_invalid_selected_index">Невірна вибрана відповідь.</string>

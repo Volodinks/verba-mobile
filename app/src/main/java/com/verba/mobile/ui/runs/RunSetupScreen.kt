@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,11 +26,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,12 +42,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.verba.mobile.R
+import com.verba.mobile.data.model.Conditional
 import com.verba.mobile.data.model.DistractorType
+import com.verba.mobile.data.model.EnglishTense
 import com.verba.mobile.data.model.EnglishVariant
 import com.verba.mobile.data.model.ExplanationLanguage
 import com.verba.mobile.data.model.FeedbackMode
 import com.verba.mobile.data.model.Level
 import com.verba.mobile.data.model.Register
+import com.verba.mobile.data.model.SentenceType
 import com.verba.mobile.ui.errors.uiErrorMessage
 import com.verba.mobile.ui.labels.label as labelOf
 
@@ -111,14 +119,32 @@ private fun Form(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SectionLabel(stringResource(R.string.start_task_count))
-        OutlinedTextField(
-            value = state.taskCount.toString(),
-            onValueChange = { txt -> txt.toIntOrNull()?.let { vm.setTaskCount(it) } },
-            singleLine = true,
+        // Open-ended toggle
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("1..100") },
-        )
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(R.string.start_open_ended), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.start_open_ended_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Switch(checked = state.openEnded, onCheckedChange = vm::setOpenEnded)
+        }
+
+        if (!state.openEnded) {
+            SectionLabel(stringResource(R.string.start_task_count))
+            OutlinedTextField(
+                value = state.taskCount.toString(),
+                onValueChange = { txt -> txt.toIntOrNull()?.let { vm.setTaskCount(it) } },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("1..100") },
+            )
+        }
 
         SectionLabel(stringResource(R.string.start_feedback_mode))
         ChipRow {
@@ -189,6 +215,8 @@ private fun Form(
             }
         }
 
+        AdvancedSection(state = state, vm = vm)
+
         state.createError?.let { Text(uiErrorMessage(it), color = MaterialTheme.colorScheme.error) }
 
         Spacer(Modifier.height(8.dp))
@@ -205,6 +233,65 @@ private fun Form(
             } else {
                 Text(stringResource(R.string.start_submit))
             }
+        }
+    }
+}
+
+@Composable
+private fun AdvancedSection(state: RunSetupUiState, vm: RunSetupViewModel) {
+    var expanded by remember { mutableStateOf(false) }
+    OutlinedButton(
+        onClick = { expanded = !expanded },
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(stringResource(R.string.start_section_advanced) + if (expanded) "  ▲" else "  ▼")
+    }
+    if (!expanded) return
+
+    SectionLabel(stringResource(R.string.start_section_explanation_enabled))
+    ChipRow {
+        FilterChip(
+            selected = state.explanationEnabled == true,
+            onClick = { vm.setExplanationEnabled(if (state.explanationEnabled == true) null else true) },
+            label = { Text(stringResource(R.string.start_feedback_immediate)) },
+        )
+        FilterChip(
+            selected = state.explanationEnabled == false,
+            onClick = { vm.setExplanationEnabled(if (state.explanationEnabled == false) null else false) },
+            label = { Text(stringResource(R.string.start_feedback_end)) },
+        )
+    }
+
+    SectionLabel(stringResource(R.string.start_section_english_tenses))
+    ChipRow {
+        EnglishTense.entries.forEach { t ->
+            FilterChip(
+                selected = t in state.englishTenses,
+                onClick = { vm.toggleTense(t) },
+                label = { Text(labelOf(t)) },
+            )
+        }
+    }
+
+    SectionLabel(stringResource(R.string.start_section_conditionals))
+    ChipRow {
+        Conditional.entries.forEach { c ->
+            FilterChip(
+                selected = c in state.conditionals,
+                onClick = { vm.toggleConditional(c) },
+                label = { Text(labelOf(c)) },
+            )
+        }
+    }
+
+    SectionLabel(stringResource(R.string.start_section_sentence_types))
+    ChipRow {
+        SentenceType.entries.forEach { s ->
+            FilterChip(
+                selected = s in state.sentenceTypes,
+                onClick = { vm.toggleSentenceType(s) },
+                label = { Text(labelOf(s)) },
+            )
         }
     }
 }

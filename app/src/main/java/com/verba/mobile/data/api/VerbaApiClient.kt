@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.verba.mobile.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.statement.HttpResponse
@@ -12,6 +13,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 
@@ -28,6 +30,21 @@ class VerbaApiClient(
     val http: HttpClient = HttpClient(OkHttp) {
         expectSuccess = false
         install(ContentNegotiation) { json(json) }
+        // Task generation goes through OpenAI on the server and can take 20–40s on a cold call.
+        // The OkHttp engine default (~10s read) trips before that, so we lift it to 60s and rely on
+        // the run-play view-model's polling-with-timeout for the *user-perceived* deadline.
+        install(HttpTimeout) {
+            requestTimeoutMillis = 60_000
+            connectTimeoutMillis = 15_000
+            socketTimeoutMillis = 60_000
+        }
+        engine {
+            config {
+                connectTimeout(15, TimeUnit.SECONDS)
+                readTimeout(60, TimeUnit.SECONDS)
+                writeTimeout(60, TimeUnit.SECONDS)
+            }
+        }
         defaultRequest {
             contentType(ContentType.Application.Json)
         }
