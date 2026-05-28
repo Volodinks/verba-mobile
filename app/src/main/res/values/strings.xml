@@ -59,7 +59,9 @@
     <string name="start_section_english_tenses">Часи</string>
     <string name="start_section_conditionals">Умовні речення</string>
     <string name="start_section_sentence_types">Типи речень</string>
-    <string name="start_section_explanation_enabled">Показувати пояснення</string>
+    <string name="start_section_explanation_enabled">Пояснення</string>
+    <string name="start_explanation_generate">Генерувати</string>
+    <string name="start_explanation_not_generate">Не генерувати</string>
     <string name="start_open_ended">Без обмеження по кількості</string>
     <string name="start_open_ended_description">Завершите урок, коли захочете.</string>
 

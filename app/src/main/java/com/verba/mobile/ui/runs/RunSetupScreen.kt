@@ -253,12 +253,12 @@ private fun AdvancedSection(state: RunSetupUiState, vm: RunSetupViewModel) {
         FilterChip(
             selected = state.explanationEnabled == true,
             onClick = { vm.setExplanationEnabled(if (state.explanationEnabled == true) null else true) },
-            label = { Text(stringResource(R.string.start_feedback_immediate)) },
+            label = { Text(stringResource(R.string.start_explanation_generate)) },
         )
         FilterChip(
             selected = state.explanationEnabled == false,
             onClick = { vm.setExplanationEnabled(if (state.explanationEnabled == false) null else false) },
-            label = { Text(stringResource(R.string.start_feedback_end)) },
+            label = { Text(stringResource(R.string.start_explanation_not_generate)) },
         )
     }
 
